@@ -1,0 +1,25 @@
+# WordPress runtime and configuration
+wp-admin/
+wp-includes/
+wp-config.php
+.htaccess
+
+# Third-party plugins and themes
+wp-content/plugins/
+wp-content/themes/kadence/
+wp-content/themes/twentytwenty*/
+
+# User content and databases
+wp-content/uploads/
+wp-content/database/
+*.sqlite
+*.sql
+
+# Generated files and local settings
+debug.log
+*.log
+*.zip
+.env
+.DS_Store
+Thumbs.db
+
