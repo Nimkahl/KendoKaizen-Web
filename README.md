@@ -20,6 +20,7 @@ The custom site code lives in `wp-content/themes/kendokaizen/`.
 - `functions.php`: event query, administration fields and page markup.
 - `app.js`: filters, calendar, event modal, theme selector and sharing.
 - `style.css`: light/dark Signal Orange visual system.
+- `assets/`: KendoKaizen brand marks for light mode, dark mode and browser icons.
 
 The WordPress database, uploaded posters, third-party plugins and complete
 Playground exports are intentionally excluded from Git. They should be backed
@@ -45,4 +46,3 @@ Every event modal contains a **Share event** button. Mobile browsers use the
 native share sheet when available. Desktop browsers offer WhatsApp, Telegram,
 Email and Copy link. Shared URLs use `#event=<event-slug>` and reopen the event
 directly in the KendoKaizen interface.
-

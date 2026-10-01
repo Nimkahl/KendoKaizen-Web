@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0 — KendoKaizen identity
+
+- Added the new ink-brush K, signal-orange ensō and shinai brand mark.
+- Added dedicated light- and dark-mode logo variants.
+- Added the new mark as the browser favicon and Apple touch icon.
+
 ## 0.5.0 — Shareable events
 
 - Added event-specific direct links.
@@ -18,4 +24,3 @@
 - Added the Signal Orange light and dark colour system.
 - Refined list cards, calendar events, modal controls and hover states.
 - Added separate List and Calendar controls.
-

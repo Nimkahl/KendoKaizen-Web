@@ -14,6 +14,14 @@ function kk_enqueue_assets() {
 }
 add_action('wp_enqueue_scripts', 'kk_enqueue_assets');
 
+function kk_brand_icons() {
+    $icon_url = get_stylesheet_directory_uri() . '/assets/kendokaizen-mark.png';
+    echo '<link rel="icon" type="image/png" sizes="512x512" href="' . esc_url($icon_url) . '">' . "\n";
+    echo '<link rel="apple-touch-icon" href="' . esc_url($icon_url) . '">' . "\n";
+}
+add_action('wp_head', 'kk_brand_icons');
+add_action('admin_head', 'kk_brand_icons');
+
 function kk_event_type_options() {
     return [
         'Seminar' => 'Seminar',

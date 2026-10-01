@@ -4,7 +4,7 @@ Theme URI: https://example.com/kendokaizen
 Description: Kadence child theme for the KendoKaizen European kendo events agenda.
 Author: KendoKaizen
 Template: kadence
-Version: 0.5.0
+Version: 0.6.0
 Text Domain: kendokaizen
 */
 
@@ -105,11 +105,33 @@ body.home #colophon {
 }
 
 .kk-brand-mark {
-  width: 38px;
-  height: 38px;
+  position: relative;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
-  color: var(--kk-red);
+  flex: 0 0 48px;
+}
+
+.kk-brand-image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.kk-brand-image-dark {
+  display: none;
+}
+
+html[data-kk-theme="dark"] .kk-brand-image-light {
+  display: none;
+}
+
+html[data-kk-theme="dark"] .kk-brand-image-dark {
+  display: block;
 }
 
 .kk-brand-name {

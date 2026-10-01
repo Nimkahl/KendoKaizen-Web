@@ -24,11 +24,8 @@
         <div class="kk-topbar-inner">
             <a class="kk-brand" href="<?php echo esc_url(home_url('/')); ?>">
                 <span class="kk-brand-mark" aria-hidden="true">
-                    <svg viewBox="0 0 48 48" width="38" height="38" fill="none">
-                        <path d="M12 40 33.5 9.5" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/>
-                        <path d="m30 8 6 4.2M9.5 35.5l7 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-                        <circle cx="35.5" cy="8.5" r="2.5" fill="currentColor"/>
-                    </svg>
+                    <img class="kk-brand-image kk-brand-image-light" src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/kendokaizen-mark.png'); ?>" alt="">
+                    <img class="kk-brand-image kk-brand-image-dark" src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/kendokaizen-mark-dark.png'); ?>" alt="">
                 </span>
                 <span class="kk-brand-name">KendoKaizen</span>
             </a>
