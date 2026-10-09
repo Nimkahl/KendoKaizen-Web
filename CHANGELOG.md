@@ -1,6 +1,62 @@
 # Changelog
 
-This repository tracks the custom KendoKaizen WordPress code. The project was initially versioned as source releases (0.x) and then iterated rapidly in WordPress Playground (1.x–5.x). The Playground history below is reconstructed from the project work completed on 5 October 2026.
+This repository tracks the reusable KendoKaizen WordPress code and the development history of the accompanying WordPress Playground builds.
+
+## 1.0.0 — First stable baseline — 9 October 2026
+
+- Declared the first stable KendoKaizen baseline.
+- Stable WordPress reference: `wordpress-playground_v6.7-practical-info-complete-v0.7.9-importer-parser-tec-fix.zip`.
+- Stable event-data reference: `KendoKaizen_Event_Pipeline_11_refetched_sources.xlsx`.
+- Includes the practical-information popup redesign, light/dark refinements, responsive calendar/list views, filtering, sharing, previous-events handling and Kirikaeshi collaborator area developed through the October Playground iterations.
+- Includes the Excel-driven event import workflow and the parser/namespace fixes through Playground v0.7.9.
+- Event Pipeline v11 adds the latest source re-fetch while preserving already curated event rows and preventing duplicate additions.
+- The spreadsheet now clearly separates `description`, `extra_information`, `poster_url`, `poster_source_url` and poster alt-text semantics.
+- Known post-v1.0 improvement: make poster URL ingestion into the WordPress Media Library and description mapping fully automatic and fault-tolerant.
+
+## v0.7.9 — Importer parser / The Events Calendar fix
+
+- Latest Playground build used for the first stable baseline.
+- Consolidated importer parser fixes and compatibility work with The Events Calendar.
+
+## v0.7.8 — Importer namespace fix
+
+- Corrected importer namespace handling.
+
+## v0.7.7 — Import field fixes
+
+- Corrected field mapping in the Excel import workflow.
+
+## v0.7.6 — Excel import test
+
+- Introduced the first structured Excel-to-WordPress import test workflow.
+
+## v0.7.5 — Light-mode text refinement
+
+- Refined light-mode text treatment following the practical-information popup work.
+
+## 6.8 — Approved Excel import test
+
+- Tested importing approved spreadsheet events into the Playground build.
+
+## 6.7 — Practical information complete
+
+- Consolidated the practical-information event popup and related fields.
+
+## 6.4 — Header map link
+
+- Added/refined map linking in the event header.
+
+## 6.3 — Banner centering
+
+- Refined banner alignment.
+
+## 6.2 — Popup information one-column layout
+
+- Moved popup practical information to a single-column treatment.
+
+## 6.1 — Popup information redesign
+
+- Introduced the revised event-information popup model.
 
 ## 5.9 — Event poster header cleanup
 
@@ -21,7 +77,6 @@ This repository tracks the custom KendoKaizen WordPress code. The project was in
 - Used a narrow vertical composition.
 - Added the KendoKaizen logo, auto-fitting event title, event type/icon, dates and location.
 - Rebuilt the WordPress Playground export after the previous ZIP was malformed.
-- Verified the export structure included `wp-config.php`, `playground-export.json`, `wp-content`, database, plugins and theme.
 
 ## 5.6 — Popup poster improvements
 
@@ -73,12 +128,7 @@ This repository tracks the custom KendoKaizen WordPress code. The project was in
 
 ## 4.0 — Event type filters
 
-- Standardised event types to:
-  - Competition
-  - Seminar
-  - Grading
-  - Training Camp
-  - Professional certifications
+- Standardised event types to Competition, Seminar, Grading, Training Camp and Professional certifications.
 - Added filtering based on those event types.
 
 ## 3.9 — Country filtering
@@ -90,132 +140,59 @@ This repository tracks the custom KendoKaizen WordPress code. The project was in
 
 - Removed carousel hover behaviour.
 
-## 3.7 — Kirikaeshi shop links
+## 3.2–3.7 — Kirikaeshi shop links
 
-- Added links for Shinai accessories.
-- Added links for Keikogi and Hakama.
-
-## 3.6 — Kirikaeshi shop links
-
-- Added the Kendo Accessories Bag link.
-
-## 3.5 — Kirikaeshi shop links
-
-- Added “Tsuba and Tsuba Dome”.
-- Added the Tsuba/Tsubadome link.
-- Added the Tenugui link.
-
-## 3.4 — Mobile calendar behaviour / shop-link iteration
-
-- Continued the mobile Weekend/Month calendar work.
-- Weekend mode displays the Friday–Saturday–Sunday blocks for the selected month.
-- Month mode restores the full-month layout.
-- Desktop calendar remained unchanged.
-- This iteration also formed part of the Kirikaeshi shop-link cleanup sequence.
-
-## 3.3 — Kirikaeshi shop links
-
-- Linked T-shirts to Clothing.
-- Linked Kendo Accessories to Kendo Bottles.
-
-## 3.2 — Kirikaeshi shop links
-
-- Linked Mugs to the mugs-and-jars category.
+- Added and refined product/category links across the Kirikaeshi collaborator carousel.
 
 ## 3.1 — Mobile theme selector
 
 - Added Light / Dark / System theme controls to the mobile header.
-- Desktop behaviour remained unchanged.
 
 ## 3.0 — Mobile Weekend view
 
 - Made Weekend the default mobile calendar mode.
-- Displays all Friday–Saturday–Sunday groups for the selected month.
 - Added Month as the alternative mobile mode.
 - Kept desktop calendar behaviour unchanged.
 
-## 2.9 — Mobile calendar modes
+## 2.8–2.9 — Mobile calendar modes and overflow
 
-- Added Month and Weekend mobile calendar modes.
+- Added Month and Weekend modes.
+- Added “+N events” overflow handling and an event panel for hidden events.
 
-## 2.8 — Mobile calendar overflow
+## 2.6–2.7 — Responsive mobile pass
 
-- Added “+N events” overflow handling.
-- Added an event panel for hidden events.
-
-## 2.7 — Mobile calendar titles
-
+- Improved the mobile layout.
 - Allowed calendar titles to wrap to two lines on mobile.
 
-## 2.6 — Responsive mobile pass
+## 2.4–2.5 — Typography and buttons
 
-- Improved the mobile layout across the KendoKaizen interface.
+- Refined title hierarchy.
+- Set light-theme buttons to signal orange with the matching hover treatment.
 
-## 2.5 — Button colours
+## 2.2–2.3 — Kirikaeshi and header styling
 
-- Set light-theme buttons to signal orange `#ff935c`.
-- Set hover state to `#ffb27f`.
+- Refined Kirikaeshi typography and the Contact-style header.
 
-## 2.4 — Title hierarchy
+## 1.4–1.6 — Navigation, contact and Kirikaeshi
 
-- Limited large headings to a maximum of 42 pt in the relevant page/header treatment.
-
-## 2.3 — Header style
-
-- Refined the site header to match the Contact-page treatment.
-
-## 2.2 — Kirikaeshi typography
-
-- Refined typography for the Kirikaeshi section/page.
-
-## 2.1 — Header refinement
-
-- Continued visual refinement of the site header.
-
-## 2.0 — Carousel labels
-
-- Corrected carousel labels.
-
-## 1.6 — Kirikaeshi tab
-
-- Added a dedicated Kirikaeshi tab.
-
-## 1.5 — Kirikaeshi collaborator
-
-- Added Kirikaeshi as a collaborator/partner area.
-
-## 1.4 — Navigation, contact and event submission
-
-- Updated the site subtitle.
 - Added Events and Contact navigation.
-- Added a Contact form.
-- Added a “Submit a Kendo event” form.
-- Contact messages are sent to the WordPress `admin_email`.
-- Submitted events are created as Pending for review.
-- Added validation and basic anti-spam handling.
-- Added mobile adaptations for these pages/forms.
+- Added Contact and event-submission forms.
+- Added Kirikaeshi collaborator content and its dedicated tab.
 
 ## 0.6.0 — KendoKaizen identity
 
-- Added the new ink-brush K, signal-orange ensō and shinai brand mark.
-- Added dedicated light- and dark-mode logo variants.
-- Added the new mark as the browser favicon and Apple touch icon.
+- Added the ink-brush K, signal-orange ensō and shinai brand mark.
+- Added light- and dark-mode logo variants.
+- Added browser/favicon assets.
 
 ## 0.5.0 — Shareable events
 
-- Added event-specific direct links.
-- Added native mobile sharing.
-- Added WhatsApp, Telegram, Email and Copy link options on desktop.
-- Preserved the KendoKaizen interface when opening a shared event.
+- Added event-specific direct links and share actions.
 
 ## 0.4.0 — Event administration
 
-- Added the KendoKaizen event details panel to the WordPress editor.
-- Added secure saving and validation for custom event metadata.
-- Added a publishing checklist and poster guidance.
+- Added the KendoKaizen event details panel and secure saving/validation.
 
 ## 0.3.0 — Signal Orange interface
 
 - Added the Signal Orange light and dark colour system.
-- Refined list cards, calendar events, modal controls and hover states.
-- Added separate List and Calendar controls.
