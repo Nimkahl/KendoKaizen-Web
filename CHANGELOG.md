@@ -2,6 +2,13 @@
 
 This repository tracks the reusable KendoKaizen WordPress code and the development history of the accompanying WordPress Playground builds.
 
+## Unreleased — Source reconciliation pending (21 October 2026)
+
+- Documented a synchronization gap: the GitHub custom theme remains at declared v0.6.0 and its last identified code change was 1 October 2026; subsequent Playground exports through v0.8.5 exist separately.
+- Created a development branch and a [synchronization checklist](SYNC_STATUS.md) to guide a source-file comparison and verified back-port.
+- Identified later Playground exports: v0.8.0 audience filter; v0.8.1–v0.8.2 logo updates; v0.8.3 production fixes; v0.8.4 description formatting; v0.8.5 schedule lines.
+- The above code changes **are not present in GitHub until their source ZIPs are fetched, diffed and committed**. This is a documentation-only update, not a code release.
+
 ## 1.0.0 — First stable baseline — 9 October 2026
 
 - Declared the first stable KendoKaizen baseline.
