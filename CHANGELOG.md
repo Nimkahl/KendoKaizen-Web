@@ -7,7 +7,8 @@ This repository tracks the reusable KendoKaizen WordPress code and the developme
 - Documented a synchronization gap: the GitHub custom theme remains at declared v0.6.0 and its last identified code change was 1 October 2026; subsequent Playground exports through v0.8.5 exist separately.
 - Created a development branch and a [synchronization checklist](SYNC_STATUS.md) to guide a source-file comparison and verified back-port.
 - Identified later Playground exports: v0.8.0 audience filter; v0.8.1–v0.8.2 logo updates; v0.8.3 production fixes; v0.8.4 description formatting; v0.8.5 schedule lines.
-- The above code changes **are not present in GitHub until their source ZIPs are fetched, diffed and committed**. This is a documentation-only update, not a code release.
+- On 21 October the actual custom theme v0.8.5 and event importer v2.4.0 source files were imported from the user-supplied ZIPs and committed on `develop/playground-v0.8.5-sync`, with each file hash verified.
+- PHP syntax and JavaScript syntax checks passed. WordPress and The Events Calendar runtime regression testing is still pending, so `main` and `stable/v1.0.0` were not promoted.
 
 ## 1.0.0 — First stable baseline — 9 October 2026
 
