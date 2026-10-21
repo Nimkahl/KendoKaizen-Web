@@ -19,9 +19,9 @@ The reusable custom WordPress source in this repository remains the clean source
 
 ## Source synchronization notice (21 October 2026)
 
-**This repository's reusable theme source is behind the most recent known Playground build.** The checked-in `wp-content/themes/kendokaizen/style.css` still declares v0.6.0, while separate project exports reached Playground **v0.8.5**. The v1.0.0 stable manifest documents a Playground reference; it does **not** prove that the equivalent application code was committed to GitHub.
+**The development branch now contains the original custom theme v0.8.5 and importer plugin v2.4.0**, extracted from the supplied WordPress Playground exports and verified with Git blob SHA hashes. The `main` and `stable/v1.0.0` branches remain unchanged pending WordPress runtime regression testing. The v1.0.0 manifest remains a historical stable Playground reference.
 
-The `develop/playground-v0.8.5-sync` branch tracks reconciliation. Refer to [SYNC_STATUS.md](SYNC_STATUS.md) for exact artifact names, known gaps and verification checklist. Do not deploy this branch as a newer version before source comparison and tests.
+The `develop/playground-v0.8.5-sync` branch contains the sync. Refer to [SYNC_STATUS.md](SYNC_STATUS.md) for exact artifact names and the remaining WordPress regression tests. Do not deploy until those checks pass.
 
 ## Requirements
 
