@@ -2,7 +2,7 @@
 
 KendoKaizen was iterated extensively in WordPress Playground during October 2026.
 
-**First declared stable Playground reference: v0.7.9.**\n\n**Latest separately stored Playground iteration found in the project library: v0.8.5 (9 October 2026).** It is not yet verified as synchronized into GitHub. See [SYNC_STATUS.md](SYNC_STATUS.md).
+**First declared stable Playground reference: v0.7.9.**\n\n**Latest separately stored Playground iteration found in the project library: v0.8.5 (9 October 2026).** Its original custom theme source was synchronized and verified on the development branch on 21 October 2026, pending runtime tests and promotion to `main`. See [SYNC_STATUS.md](SYNC_STATUS.md).
 
 The first stable project baseline, **KendoKaizen v1.0.0**, was declared on **9 October 2026** using:
 
@@ -42,7 +42,7 @@ The first stable project baseline, **KendoKaizen v1.0.0**, was declared on **9 O
 - v0.8.4 — event description formatting; both exports retained.
 - v0.8.5 — schedule line handling; most recent known Playground and isolated theme exports retained on 9 October 2026.
 
-The entries above identify **export artifacts and intended iterations**, not code that has already been merged to this GitHub repository. The raw ZIP archives must be inspected before checking code equivalence.
+The entries above identify **export artifacts and intended iterations**. The v0.8.5 theme source and importer v2.4.0 were verified from the latest ZIPs and committed to the development branch on 21 October; earlier intermediate iterations are documented historically and have not been promoted independently.
 
 ## Export storage
 
