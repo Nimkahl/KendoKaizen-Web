@@ -2,7 +2,7 @@
 
 KendoKaizen was iterated extensively in WordPress Playground during October 2026.
 
-**Latest stable Playground reference: v0.7.9.**
+**First declared stable Playground reference: v0.7.9.**\n\n**Latest separately stored Playground iteration found in the project library: v0.8.5 (9 October 2026).** It is not yet verified as synchronized into GitHub. See [SYNC_STATUS.md](SYNC_STATUS.md).
 
 The first stable project baseline, **KendoKaizen v1.0.0**, was declared on **9 October 2026** using:
 
@@ -35,6 +35,14 @@ The first stable project baseline, **KendoKaizen v1.0.0**, was declared on **9 O
 - v0.7.7 — importer field fixes.
 - v0.7.8 — importer namespace fix.
 - v0.7.9 — importer parser / The Events Calendar fix; selected as the stable WordPress baseline for KendoKaizen v1.0.0.
+- v0.8.0 — audience-filter iteration (based on export filename).
+- v0.8.1 — refreshed logo (based on export filename).
+- v0.8.2 — orange logo fixed; isolated custom theme export also retained.
+- v0.8.3 — production fixes; both Playground and isolated theme exports retained.
+- v0.8.4 — event description formatting; both exports retained.
+- v0.8.5 — schedule line handling; most recent known Playground and isolated theme exports retained on 9 October 2026.
+
+The entries above identify **export artifacts and intended iterations**, not code that has already been merged to this GitHub repository. The raw ZIP archives must be inspected before checking code equivalence.
 
 ## Export storage
 
