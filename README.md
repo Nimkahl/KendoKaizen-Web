@@ -17,6 +17,12 @@ The complete Playground exports are intentionally kept outside Git because they 
 
 The reusable custom WordPress source in this repository remains the clean source representation. When a change is developed in Playground, it should be back-ported into this source tree before a production release whenever practical.
 
+## Source synchronization notice (21 October 2026)
+
+**This repository's reusable theme source is behind the most recent known Playground build.** The checked-in `wp-content/themes/kendokaizen/style.css` still declares v0.6.0, while separate project exports reached Playground **v0.8.5**. The v1.0.0 stable manifest documents a Playground reference; it does **not** prove that the equivalent application code was committed to GitHub.
+
+The `develop/playground-v0.8.5-sync` branch tracks reconciliation. Refer to [SYNC_STATUS.md](SYNC_STATUS.md) for exact artifact names, known gaps and verification checklist. Do not deploy this branch as a newer version before source comparison and tests.
+
 ## Requirements
 
 - WordPress 6.5 or newer
