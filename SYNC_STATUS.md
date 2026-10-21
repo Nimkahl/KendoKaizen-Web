@@ -1,6 +1,6 @@
 # Synchronization status — 2026-10-21
 
-**Status: BLOCKED — development branch prepared, but source files have NOT been synchronized.**
+**Status: SOURCE SYNC COMPLETE on development branch; WordPress runtime regression testing remains pending.**
 
 This document records independently verified differences between the repository and the latest known KendoKaizen WordPress Playground exports. It is **not** an approval of a new stable release.
 
@@ -22,18 +22,19 @@ The following names and timestamps were verified in the Kendo Web - EC project l
 | Custom importer candidate | `KendoKaizen-event-importer-v2.4.0.zip` | 2026-10-09 |
 | Latest known event pipeline as of review | `KendoKaizen_Event_Pipeline_16_New_events_2026-10-21.xlsm` | 2026-10-21 |
 
-**IMPORTANT:** These files were found by filename, but the current tool session could not obtain their raw ZIP bytes. A file listing is not proof of internal equivalence. They are **not committed here**, and their internal code was not diffed.
+**IMPORTANT:** On 21 October 2026, the user supplied the v0.8.5 theme and complete Playground ZIP exports. All 23 theme files in the standalone archive matched the corresponding Playground ZIP entries byte-for-byte. The custom importer plugin was extracted from the Playground export (v2.4.0). The 25 reusable custom source files (including graphics) were committed to this branch with Git blob SHA verification. Third-party dependencies and runtime data remain excluded.
 
 ## Synchronization checklist
 - [x] Inspect GitHub branches, repository tree, code commit history and version manifest.
 - [x] Identify latest known theme, Playground and importer export filenames.
 - [x] Create dedicated development branch without altering the stable branch.
-- [ ] Obtain downloadable raw bytes of the latest isolated theme and full Playground ZIP.
-- [ ] Inspect ZIP structure, exclude WP core, third-party plugins, WordPress database, uploads and secrets.
-- [ ] Compare `wp-content/themes/kendokaizen/` (PHP, JS, CSS, bundled custom assets) against current GitHub.
-- [ ] Locate the custom event importer within the latest Playground and compare it with the standalone importer v2.4.0.
-- [ ] Commit the **actual** reusable custom theme and importer sources to the development branch; never replace them with recreated placeholders.
-- [ ] Run PHP lint, JS syntax check and appropriate WordPress / The Events Calendar compatibility tests.
+- [x] Obtain downloadable raw bytes of the latest isolated theme and full Playground ZIP.
+- [x] Inspect ZIP structure, exclude WP core, third-party plugins, WordPress database, uploads and secrets.
+- [x] Compare `wp-content/themes/kendokaizen/` (PHP, JS, CSS, bundled custom assets) against current GitHub using Git blob SHA hashes.
+- [x] Locate the custom event importer v2.4.0 inside the latest Playground; independent ZIP identity has not been separately compared.
+- [x] Commit the **actual** reusable custom theme and importer sources to the development branch (commit `1a1bd8843581ef764ba068c3a4e34015cdb629f2`).
+- [x] Run `php -l` on the 3 custom PHP files and `node --check` on `app.js` (passed).
+- [ ] Run WordPress / The Events Calendar integration and compatibility tests in an actual runtime.
 - [ ] Exercise event list, calendar (desktop and mobile), filters, share links, event popup, schedule, description formatting, posters and spreadsheet import with `Approved` / `To update` workflows.
 - [ ] Compare important screens and event field mappings with the latest Playground.
 - [ ] Review the diff and promote to `main` only after code equivalence and regression checks; preserve `stable/v1.0.0` as historical reference unless a separate stability promotion is authorized.
@@ -48,4 +49,4 @@ The following names and timestamps were verified in the Kendo Web - EC project l
 ## Storage rules
 Only reusable custom code, non-sensitive design assets and documentation should go into the public repository. Keep event records, full Playground runtime exports, WordPress database, uploaded media, credentials and user information out of source control. Maintain separate backups of the latest Excel pipeline and full Playground export.
 
-Until the pending comparison and implementation pass, **do not treat this development branch as the newest deployable version**.
+The development branch now contains the complete extracted custom theme v0.8.5 and importer v2.4.0, verified against supplied files; **do not treat it as production-deployable until runtime regression testing is completed**.
