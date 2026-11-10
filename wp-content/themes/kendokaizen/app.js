@@ -82,9 +82,14 @@
   const listPanel = document.querySelector('.kk-list-panel');
   const calendarPanel = document.querySelector('.kk-calendar-panel');
   const timelinePanel = document.querySelector('.kk-timeline-panel');
-  let timelineMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const timelineDates = events.flatMap(event => [event.start, event.end || event.start]).filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
+  const timelineFirst = timelineDates.length ? new Date(`${timelineDates[0]}T12:00:00`) : new Date();
+  const timelineLast = timelineDates.length ? new Date(`${timelineDates[timelineDates.length - 1]}T12:00:00`) : timelineFirst;
+  const timelineFullMonths = Math.max(1, (timelineLast.getFullYear() - timelineFirst.getFullYear()) * 12 + timelineLast.getMonth() - timelineFirst.getMonth() + 1);
+  let timelineMonths = timelineFullMonths;
+  let timelineMonth = new Date(timelineFirst.getFullYear(), timelineFirst.getMonth(), 1);
   const renderTimeline = () => {
-    if (!timelinePanel.hidden) window.KendoTimeline.render(timelinePanel, filteredEvents(), timelineMonth.getFullYear(), timelineMonth.getMonth());
+    if (!timelinePanel.hidden) window.KendoTimeline.render(timelinePanel, filteredEvents(true), timelineMonth.getFullYear(), timelineMonth.getMonth(), timelineMonths, events);
   };
   const calendarGrid = document.querySelector('.kk-calendar-grid');
   const calendarTitle = document.querySelector('.kk-calendar-title');
@@ -296,8 +301,8 @@
     return first;
   };
 
-  const filteredEvents = () => events.filter(event => {
-    return (!countryFilter.value || event.country === countryFilter.value)
+  const filteredEvents = (ignoreCountry = false) => events.filter(event => {
+    return (ignoreCountry || !countryFilter.value || event.country === countryFilter.value)
       && (!typeFilter.value || (Array.isArray(event.types) ? event.types.includes(typeFilter.value) : event.type === typeFilter.value))
       && (!audienceFilter.value || (Array.isArray(event.audiences) ? event.audiences.includes(audienceFilter.value) : event.audience === audienceFilter.value));
   });
@@ -653,6 +658,7 @@
       listPanel.hidden = viewButton.dataset.view !== 'list';
       calendarPanel.hidden = !showCalendar;
       timelinePanel.hidden = viewButton.dataset.view !== 'timeline';
+      countryFilter.hidden = !timelinePanel.hidden;
       if (showCalendar) renderCalendar();
       renderTimeline();
     }
@@ -665,6 +671,12 @@
     if (event.target.closest('[data-timeline-today]')) {
       const now = new Date();
       timelineMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      timelineMonths = 3;
+      renderTimeline();
+    }
+    if (event.target.closest('[data-timeline-all]')) {
+      timelineMonth = new Date(timelineFirst.getFullYear(), timelineFirst.getMonth(), 1);
+      timelineMonths = timelineFullMonths;
       renderTimeline();
     }
 

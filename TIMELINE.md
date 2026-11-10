@@ -1,15 +1,29 @@
-# Timeline preview — theme v0.8.7
+# Timeline preview — theme v0.8.11
 
-The branch first aligns the theme with the supplied v0.8.6 Playground export, then adds Timeline alongside List and Calendar. No database or importer migration is needed.
+Current work lives on `codex/event-collection-review`. It is a preview, not a stable promotion. The supplied v0.8.6 export remains the underlying application/data baseline.
 
-Each row is an event; country flags precede its name. The date axis covers three months starting with the current month. Previous/next move three months, Today resets the period. End dates are inclusive, and events crossing the window are clipped. Names stay fixed during horizontal scrolling. Names and bars open the existing event modal; all three views share country, event-type and audience filters.
+## Behaviour
 
-Competition uses #17365D, seminar #287A48 and grading/exam #454545. Multi-type events have equal colour segments in that order; these represent categories rather than session dates. Training camps share seminar green; professional certifications share exam grey. Unknown countries use a globe. The surrounding UI keeps the website's existing English labels and theme switch.
+Each country has a row, with its flag and checkbox fixed on the left. All countries start selected. Active countries appear alphabetically; unticked countries move to a compact alphabetical section at the bottom. Ticking restores their active position. Untick all switches to Tick all once no countries are selected.
 
-## Validation
+The initial date range covers all loaded events. All dates restores that range; Today switches to three months starting with the current month. Previous/next moves three months. Type and audience filters are shared with the other views; the timeline uses its own multi-country selection in place of the single-country dropdown. Bars and event titles open the existing event modal. Overlapping bars/titles use separate lanes within a country.
 
-Run `node --test tests/timeline.test.cjs` for inclusive spans, window clipping, leap years, year changes, invalid dates, category order and country flags. Browser integration was checked against an independent local WordPress Playground with the supplied export's database and plugins, in desktop (1440px), mobile (390px) and dark mode. Navigation, shared filters, empty periods, fixed labels, horizontal keyboard scrolling and event modals were exercised. Temporary multi-type fixtures were rendered only in browser memory, never written to the database.
+Competition uses #17365D, seminar #287A48 and grading/exam #454545. Multi-type bars have equal segments in this order. Camps share seminar green; professional certifications share exam grey. Colours indicate categories, not session times. Unknown countries use a globe.
 
-## Package
+## PDF download
 
-Run `python3 scripts/package-timeline.py /absolute/path/original.zip /absolute/path/new.zip`. Only app.js, functions.php, style.css and the new timeline.js are replaced. The script verifies every other archive entry is byte-identical, including the database, importer, uploads and export metadata. Import the resulting ZIP using WordPress Playground's Import option. Keep the original export to revert.
+Download PDF exports the selected countries, current event filters and date window directly in the browser. Hidden countries are excluded. Monthly landscape pages have day grids, full event titles and inclusive date spans; events crossing months appear in each relevant month. The button is disabled when no selected events are available. jsPDF and Liberation Sans are bundled locally under assets/pdf with their license notices.
+
+## Source structure
+
+- `timeline.js`: date model, country selection, ordering, timeline rendering and PDF generation.
+- `app.js`: view switching, filters and date navigation.
+- `functions.php`: WordPress markup and script loading.
+- `style.css`: responsive timeline styling and rectangular controls.
+- `assets/pdf/`: PDF library, embedded font and licenses.
+
+## Validation and package
+
+Date/category model tests cover inclusive spans, clipping, leap years, invalid dates and flags. Local WordPress Playground browser checks covered 22 events, 14 country entries, checkbox ordering/restoration, bulk selection, view switching and mobile layout. PDF downloads were checked on desktop and mobile; extracted text confirmed excluded countries are absent, and the generated layout was visually reviewed.
+
+Run `python3 scripts/package-timeline.py /absolute/path/original.zip /absolute/path/new.zip`. The packager replaces the four timeline theme files and includes PDF assets, verifying every other original ZIP entry remains byte-identical. Full Playground ZIPs and spreadsheet data remain outside Git. Current ZIP: `wordpress-playground_v0.8.11-timeline-pdf-preview.zip`.

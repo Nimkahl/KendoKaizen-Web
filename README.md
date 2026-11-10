@@ -6,7 +6,7 @@ KendoKaizen is a WordPress agenda for European kendo seminars, competitions, gra
 
 ### Current development snapshot
 
-The current preview is Playground/theme v0.8.7 (timeline), based on the supplied v0.8.6 export. Use branch `codex/event-collection-review`. See [TIMELINE.md](TIMELINE.md) for behaviour, validation and ZIP packaging, and [PROJECT_STATUS.md](PROJECT_STATUS.md) for branch roles. The approved stable baseline remains v1.0.0; this preview has not been promoted to stable.
+The current preview is Playground/theme v0.8.11 (timeline), based on the supplied v0.8.6 export. Use branch `codex/event-collection-review`. See [TIMELINE.md](TIMELINE.md) for behaviour, validation and ZIP packaging, and [PROJECT_STATUS.md](PROJECT_STATUS.md) for branch roles. The approved stable baseline remains v1.0.0; this preview has not been promoted to stable.
 
 Event Pipeline 17 was inspected locally; the simplified review/upload tab is still planned and has not been implemented. Spreadsheets and full Playground ZIPs remain external backups.
 

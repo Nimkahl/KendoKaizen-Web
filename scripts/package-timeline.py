@@ -13,6 +13,9 @@ root = pathlib.Path(__file__).resolve().parent.parent
 theme = 'wp-content/themes/kendokaizen/'
 replacements = {theme + name: (root / theme / name).read_bytes()
                 for name in ('app.js', 'functions.php', 'style.css', 'timeline.js')}
+for asset in (root / theme / 'assets/pdf').glob('*'):
+    if asset.is_file():
+        replacements[asset.relative_to(root).as_posix()] = asset.read_bytes()
 args.output.parent.mkdir(parents=True, exist_ok=True)
 with zipfile.ZipFile(args.original) as source, zipfile.ZipFile(args.output, 'w', zipfile.ZIP_DEFLATED) as target:
     existing = set(source.namelist())

@@ -2,6 +2,14 @@
 
 This repository tracks the reusable KendoKaizen WordPress code and the development history of the accompanying WordPress Playground builds.
 
+## Development — theme v0.8.11
+
+- Grouped timeline by country with inline selection and alphabetical active/hidden sections.
+- Added Tick all / Untick all and full-date-range reset.
+- Changed timeline controls to rectangular buttons.
+- Added local PDF download for active countries, filters and dates, split into monthly landscape pages.
+- Bundled jsPDF and Liberation Sans with their licenses; no external CDN is required.
+
 ## Development — theme v0.8.7 — 10 November 2026
 
 - Synchronized the supplied v0.8.6 theme and assets.

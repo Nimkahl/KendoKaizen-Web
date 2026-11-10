@@ -9,7 +9,9 @@ function kk_enqueue_assets() {
     wp_enqueue_style('kendokaizen', get_stylesheet_uri(), ['kadence-parent'], wp_get_theme()->get('Version'));
 
     if (is_front_page()) {
-        wp_enqueue_script('kendokaizen-timeline', get_stylesheet_directory_uri() . '/timeline.js', [], wp_get_theme()->get('Version'), true);
+        wp_enqueue_script('kendokaizen-jspdf', get_stylesheet_directory_uri() . '/assets/pdf/jspdf.umd.min.js', [], wp_get_theme()->get('Version'), true);
+        wp_enqueue_script('kendokaizen-pdf-font', get_stylesheet_directory_uri() . '/assets/pdf/font.js', [], wp_get_theme()->get('Version'), true);
+        wp_enqueue_script('kendokaizen-timeline', get_stylesheet_directory_uri() . '/timeline.js', ['kendokaizen-jspdf', 'kendokaizen-pdf-font'], wp_get_theme()->get('Version'), true);
         wp_enqueue_script('kendokaizen-app', get_stylesheet_directory_uri() . '/app.js', ['kendokaizen-timeline'], wp_get_theme()->get('Version'), true);
     }
 }
@@ -561,6 +563,9 @@ function kk_events_shortcode() {
             <div class="kk-timeline-head">
                 <h2 class="kk-timeline-title" aria-live="polite"></h2>
                 <div class="kk-timeline-nav" role="group" aria-label="Timeline navigation">
+                    <button type="button" class="kk-month-button" data-timeline-pdf>Download PDF</button>
+                    <button type="button" class="kk-month-button" data-timeline-toggle-countries>Untick all</button>
+                    <button type="button" class="kk-month-button" data-timeline-all>All dates</button>
                     <button type="button" class="kk-month-button" data-timeline-step="-1" aria-label="Previous three months">←</button>
                     <button type="button" class="kk-month-button" data-timeline-today>Today</button>
                     <button type="button" class="kk-month-button" data-timeline-step="1" aria-label="Next three months">→</button>
@@ -571,9 +576,9 @@ function kk_events_shortcode() {
                 <span><i style="background:#287A48" aria-hidden="true"></i>Seminar / training camp</span>
                 <span><i style="background:#454545" aria-hidden="true"></i>Grading / exam</span>
             </div>
-            <p class="kk-timeline-help">Scroll horizontally to explore dates. Split colours indicate event types, not separate sessions.</p>
+            <p class="kk-timeline-help">Unticked countries move to the bottom. Tick them again to restore their alphabetical position. Scroll horizontally to explore dates. Split colours indicate event types, not separate sessions.</p>
             <p class="kk-timeline-count" role="status"></p>
-            <div class="kk-timeline-scroll" tabindex="0" role="region" aria-label="Three-month timeline, scroll horizontally for dates">
+            <div class="kk-timeline-scroll" tabindex="0" role="region" aria-label="Timeline by country, scroll horizontally for dates">
                 <div class="kk-timeline-grid"></div>
             </div>
             <p class="kk-timeline-empty" hidden>No events in this period match your filters. Try another period or change the filters.</p>

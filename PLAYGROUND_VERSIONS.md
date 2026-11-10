@@ -11,6 +11,8 @@ The first stable project baseline, **KendoKaizen v1.0.0**, was declared on **9 O
 
 ## Current development
 
+- v0.8.11: current preview with country rows, inline checkboxes, alphabetical active/hidden groups, Tick all / Untick all, rectangular controls and PDF download. ZIP: `wordpress-playground_v0.8.11-timeline-pdf-preview.zip`.
+
 - v0.8.6: supplied baseline with event disclaimer, contact/submission forms and current theme assets.
 - v0.8.7: timeline preview, country flags, three-month navigation and split type colours. ZIP: `wordpress-playground_v0.8.7-timeline.zip`.
 - Stable baseline remains v0.7.9 / project v1.0.0 until explicitly promoted.
