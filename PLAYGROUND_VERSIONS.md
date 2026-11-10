@@ -9,6 +9,12 @@ The first stable project baseline, **KendoKaizen v1.0.0**, was declared on **9 O
 - `wordpress-playground_v6.7-practical-info-complete-v0.7.9-importer-parser-tec-fix.zip`
 - `KendoKaizen_Event_Pipeline_11_refetched_sources.xlsx`
 
+## Current development
+
+- v0.8.6: supplied baseline with event disclaimer, contact/submission forms and current theme assets.
+- v0.8.7: timeline preview, country flags, three-month navigation and split type colours. ZIP: .
+- Stable baseline remains v0.7.9 / project v1.0.0 until explicitly promoted.
+
 ## Export sequence
 
 - v1.3 — imported/starting Playground state for the October iteration.

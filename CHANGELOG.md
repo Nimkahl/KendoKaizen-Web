@@ -2,6 +2,13 @@
 
 This repository tracks the reusable KendoKaizen WordPress code and the development history of the accompanying WordPress Playground builds.
 
+## Development — theme v0.8.7 — 10 November 2026
+
+- Synchronized the supplied v0.8.6 theme and assets.
+- Added the timeline with flags, shared filters, inclusive dates and split category colours.
+- Included date-model tests and a ZIP packager preserving all other archive entries.
+- Included the importer source from the supplied v0.8.6 export, without changing its behaviour.
+
 ## 1.0.0 — First stable baseline — 9 October 2026
 
 - Declared the first stable KendoKaizen baseline.

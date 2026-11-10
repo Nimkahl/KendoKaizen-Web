@@ -4,6 +4,13 @@ KendoKaizen is a WordPress agenda for European kendo seminars, competitions, gra
 
 ## Project status
 
+## Current development snapshot
+
+The current preview is Playground/theme v0.8.7 (timeline), based on the supplied v0.8.6 export. Use branch . See [TIMELINE.md](TIMELINE.md) for behaviour, validation and ZIP packaging. The approved stable baseline remains v1.0.0; this preview has not been promoted to stable.
+
+Event Pipeline 17 was inspected locally; the simplified review/upload tab is still planned and has not been implemented. Spreadsheets and full Playground ZIPs remain external backups.
+
+
 **First stable baseline: v1.0.0 — 9 October 2026.**
 
 The stable baseline is defined by the following paired project artifacts:
