@@ -1,5 +1,9 @@
 # WordPress Playground version history
 
+## v0.8.14 — approved source integration
+
+Home, Contact and the compact monthly Archive are included, together with v0.8.12 calendar flags/export and v0.8.11 timeline/PDF features. Archive defaults to all completed events, grouped newest-first, with year/month/country/type filters. Existing importer files are preserved. Desktop/mobile browser checks and 11 calendar/timeline unit checks passed. Export: `wordpress-playground_v0.8.14-archive-preview.zip` (kept outside Git). No production server deployment.
+
 KendoKaizen was iterated extensively in WordPress Playground during October 2026.
 
 **Latest stable Playground reference: v0.7.9.**

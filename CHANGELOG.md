@@ -1,3 +1,15 @@
+## v0.8.12 — Calendar flags and event export (local preview)
+
+## v0.8.14 — approved source integration
+
+Home, Contact and the compact monthly Archive are included, together with v0.8.12 calendar flags/export and v0.8.11 timeline/PDF features. Archive defaults to all completed events, grouped newest-first, with year/month/country/type filters. Existing importer files are preserved. Desktop/mobile browser checks and 11 calendar/timeline unit checks passed. Export: `wordpress-playground_v0.8.14-archive-preview.zip` (kept outside Git). No production server deployment.
+
+- Country flag before the event-type icon in Calendar view, including accessible country labels.
+- Shared event popup offers Google Calendar, Outlook.com, Microsoft 365 and portable .ics export.
+- Includes practical details; preserves all-day dates and stored event time zones. Oversized provider links fall back to the complete file.
+- Separate local branch `codex/calendar-flags-and-export`; no GitHub update or deployment yet.
+- Validation: 11 Node tests, desktop/mobile browser checks, menu/keyboard/download checks, timeline country ordering and PDF regressions. No imports into personal calendar accounts were performed.
+
 # Changelog
 
 This repository tracks the reusable KendoKaizen WordPress code and the development history of the accompanying WordPress Playground builds.

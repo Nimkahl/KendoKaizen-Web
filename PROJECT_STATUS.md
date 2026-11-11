@@ -1,8 +1,10 @@
 # Project status
 
-- `main` and `stable/v1.0.0`: approved historical baseline.
-- `codex/event-collection-review`: current timeline preview v0.8.11, based on the supplied v0.8.6 export; importer source included.
-- `develop/playground-v0.8.5-sync`: earlier synchronization branch; retained for history, not the current preview.
-- `feature/published-review-indicators`: separate review-reminder plugin experiment; not integrated or activated in the timeline export.
+- `main`: approved v0.8.14 source, with Home, monthly Archive and Contact pages; calendar flags/export and the country timeline/PDF features included.
+- `codex/archive-and-contact-pages`: integration branch for the approved v0.8.14 changes.
+- `codex/event-collection-review`: preserved v0.8.11 timeline preview history.
+- `stable/v1.0.0`: historical baseline retained unchanged.
+- `develop/playground-v0.8.5-sync`: historical synchronization branch.
+- `feature/published-review-indicators`: separate experiment, not integrated.
 
-The review/upload spreadsheet tab and scraping workflow remain pending. No stable promotion or server deployment is included.
+Full Playground ZIPs and spreadsheets remain outside Git. This promotion updates repository source only; no server deployment is performed. Provider calendar links still need authenticated calendar-app confirmation; portable ICS validation passed. Spreadsheet synchronization and automated event collection remain separate follow-up work.

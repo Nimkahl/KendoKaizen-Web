@@ -12,7 +12,7 @@ if args.original.resolve() == args.output.resolve():
 root = pathlib.Path(__file__).resolve().parent.parent
 theme = 'wp-content/themes/kendokaizen/'
 replacements = {theme + name: (root / theme / name).read_bytes()
-                for name in ('app.js', 'functions.php', 'style.css', 'timeline.js')}
+                for name in ('app.js', 'functions.php', 'style.css', 'timeline.js', 'calendar-export.js', 'front-page.php', 'header-kendokaizen.php', 'footer-kendokaizen.php', 'page-archive.php', 'page-contact.php')}
 for asset in (root / theme / 'assets/pdf').glob('*'):
     if asset.is_file():
         replacements[asset.relative_to(root).as_posix()] = asset.read_bytes()

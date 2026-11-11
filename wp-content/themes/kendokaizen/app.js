@@ -76,9 +76,15 @@
   const dataNode = document.getElementById('kk-event-data');
   if (!dataNode) return;
 
-  const events = JSON.parse(dataNode.textContent || '[]');
-  const eventsById = new Map(events.map(event => [String(event.id), event]));
-  const eventsBySlug = new Map(events.filter(event => event.slug).map(event => [String(event.slug), event]));
+  const app = document.querySelector('.kk-app');
+  const scope = app.dataset.scope || 'all';
+  const allEvents = JSON.parse(dataNode.textContent || '[]');
+  const todayIso = app.dataset.today;
+  const isPastEvent = event => Boolean(event && (event.end || event.start) < todayIso);
+  const events = allEvents.filter(event => scope === 'all' || (scope === 'past' ? isPastEvent(event) : !isPastEvent(event)));
+  events.sort((a, b) => scope === 'past' ? b.start.localeCompare(a.start) : a.start.localeCompare(b.start));
+  const eventsById = new Map(allEvents.map(event => [String(event.id), event]));
+  const eventsBySlug = new Map(allEvents.filter(event => event.slug).map(event => [String(event.slug), event]));
   const listPanel = document.querySelector('.kk-list-panel');
   const calendarPanel = document.querySelector('.kk-calendar-panel');
   const timelinePanel = document.querySelector('.kk-timeline-panel');
@@ -158,22 +164,14 @@
   let calendarMode = mobileCalendar.matches ? 'weekend' : 'month';
 
 
-  const today = new Date();
-  const todayIso = [
-    today.getFullYear(),
-    String(today.getMonth() + 1).padStart(2, '0'),
-    String(today.getDate()).padStart(2, '0'),
-  ].join('-');
-
-  const isPastEvent = event => Boolean(event && event.end && event.end < todayIso);
-
   const organiseEventLists = () => {
     document.querySelectorAll('.kk-card').forEach(card => {
       const button = card.querySelector('[data-event-id]');
       const event = button ? eventsById.get(String(button.dataset.eventId)) : null;
       if (!event) return;
+      if (!events.includes(event)) { card.remove(); return; }
       card.classList.toggle('is-past', isPastEvent(event));
-      (isPastEvent(event) ? previousList : mainEventList).appendChild(card);
+      (scope === 'all' && isPastEvent(event) ? previousList : mainEventList).appendChild(card);
     });
   };
 
@@ -199,7 +197,11 @@
     const label = document.createElement('span');
     label.className = 'kk-calendar-event-label';
     label.textContent = event.title;
-    fragment.append(icon, label);
+    const flag = document.createElement('span');
+    flag.className = 'kk-calendar-event-flag';
+    flag.setAttribute('aria-hidden', 'true');
+    flag.textContent = window.KendoTimeline.flagFor(event.country);
+    fragment.append(flag, icon, label);
     return fragment;
   };
 
@@ -301,13 +303,54 @@
     return first;
   };
 
+  const yearFilter = document.getElementById('kk-year-filter');
+  const monthFilter = document.getElementById('kk-month-filter');
+  if (yearFilter) {
+    [...new Set(events.map(event => event.start.slice(0, 4)))].sort().reverse().forEach(year => yearFilter.add(new Option(year, year)));
+    yearFilter.addEventListener('change', () => updateFilters());
+    monthFilter.addEventListener('change', () => updateFilters());
+  }
+
+  const renderArchive = () => {
+    const selected = filteredEvents();
+    const groups = new Map();
+    selected.forEach(event => {
+      const key = event.start.slice(0, 7);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(event);
+    });
+    mainEventList.classList.add('kk-archive-list');
+    mainEventList.innerHTML = [...groups].map(([key, group]) => {
+      const heading = new Date(`${key}-01T12:00:00`).toLocaleDateString('en-GB', {month: 'long', year: 'numeric'});
+      return `<section class="kk-archive-month" aria-labelledby="archive-${key}"><h2 id="archive-${key}">${escapeHtml(heading)}</h2><ul>${group.map(event => {
+        const start = new Date(`${event.start}T12:00:00`);
+        const end = event.end && event.end !== event.start ? new Date(`${event.end}T12:00:00`) : null;
+        const differentMonth = end && event.end.slice(0, 7) !== key;
+        const day = start.getDate();
+        const endLabel = end ? `–${end.getDate()}${differentMonth ? ' ' + end.toLocaleDateString('en-GB', {month: 'short'}) + (end.getFullYear() !== start.getFullYear() ? ' ' + end.getFullYear() : '') : ''}` : '';
+        const country = event.country || 'Country not specified';
+        return `<li><button type="button" class="kk-archive-row" data-event-id="${escapeHtml(event.id)}" aria-label="${escapeHtml(event.title + ', ' + event.dateLabel + ', ' + country)}">
+          <span class="kk-archive-date"><strong>${day}${escapeHtml(endLabel)}</strong><small>${start.toLocaleDateString('en-GB', {weekday:'short'})}</small></span>
+          <span class="kk-archive-summary"><strong>${escapeHtml(event.title)}</strong><span><span aria-hidden="true">${window.KendoTimeline.flagFor(event.country)}</span> ${escapeHtml([event.city, country].filter(Boolean).join(', '))}</span></span>
+          <span class="kk-archive-type">${escapeHtml(event.type)}</span><span class="kk-archive-arrow" aria-hidden="true">↗</span>
+        </button></li>`;
+      }).join('')}</ul></section>`;
+    }).join('');
+    previousEvents.hidden = true;
+    resultCount.textContent = `${selected.length} past event${selected.length === 1 ? '' : 's'}`;
+    emptyState.hidden = selected.length !== 0;
+  };
+
   const filteredEvents = (ignoreCountry = false) => events.filter(event => {
-    return (ignoreCountry || !countryFilter.value || event.country === countryFilter.value)
+    return (!yearFilter?.value || event.start.slice(0, 4) === yearFilter.value)
+      && (!monthFilter?.value || event.start.slice(5, 7) === monthFilter.value)
+      && (ignoreCountry || !countryFilter.value || event.country === countryFilter.value)
       && (!typeFilter.value || (Array.isArray(event.types) ? event.types.includes(typeFilter.value) : event.type === typeFilter.value))
       && (!audienceFilter.value || (Array.isArray(event.audiences) ? event.audiences.includes(audienceFilter.value) : event.audience === audienceFilter.value));
   });
 
   const updateFilters = () => {
+    if (scope === 'past') { renderArchive(); return; }
     const allowed = new Set(filteredEvents().map(event => String(event.id)));
     let visible = 0;
     let visibleUpcoming = 0;
@@ -325,11 +368,11 @@
       }
     });
 
-    previousEvents.hidden = visiblePrevious === 0;
+    previousEvents.hidden = scope !== 'all' || visiblePrevious === 0;
     previousCount.textContent = visiblePrevious ? `${visiblePrevious}` : '';
     resultCount.textContent = `${visible} event${visible === 1 ? '' : 's'}`;
     emptyState.hidden = visible !== 0;
-    mainEventList.classList.toggle('is-empty', visibleUpcoming === 0);
+    mainEventList.classList.toggle('is-empty', (scope === 'past' ? visible : visibleUpcoming) === 0);
     renderCalendar();
     renderTimeline();
   };
@@ -413,6 +456,7 @@
       button.type = 'button';
       button.dataset.eventId = segment.event.id;
       button.dataset.eventType = segment.event.type;
+      button.setAttribute('aria-label', `${segment.event.country || 'Country not specified'}: ${segment.event.type}, ${segment.event.title}, ${segment.event.dateLabel}`);
       button.appendChild(buildCalendarEventContent(segment.event));
       button.style.gridColumn = `${segment.startCol} / ${segment.endCol + 1}`;
       button.style.marginTop = `${firstEventOffset + (segment.lane * laneStep)}px`;
@@ -502,6 +546,37 @@
     closeShareMenu();
   };
 
+  const calendarButton = modal.querySelector('.kk-calendar-export-button');
+  const calendarMenu = modal.querySelector('.kk-calendar-export-menu');
+  const calendarStatus = modal.querySelector('[data-calendar-status]');
+  let calendarExport = null;
+  const closeCalendarMenu = () => {
+    calendarMenu.hidden = true;
+    calendarButton.setAttribute('aria-expanded', 'false');
+  };
+  const prepareCalendarMenu = event => {
+    closeCalendarMenu();
+    try {
+      const description = document.createElement('div');
+      description.innerHTML = (event.description || '').replace(/<\/(p|div|li|h[1-6])>|<br\s*\/?>/gi, '\n');
+      calendarExport = window.KendoCalendarExport.build(event, description.textContent, shareUrlFor(event));
+      let tooLong = false;
+      calendarMenu.querySelectorAll('[data-calendar-provider]').forEach(link => {
+        const url = calendarExport.links[link.dataset.calendarProvider];
+        link.hidden = url.length > 2000;
+        if (link.hidden) { link.removeAttribute('href'); tooLong = true; }
+        else link.href = url;
+      });
+      calendarStatus.textContent = tooLong ? 'For complete event details, download the .ics file.' : '';
+      calendarButton.disabled = false;
+      calendarButton.removeAttribute('title');
+    } catch (error) {
+      calendarExport = null;
+      calendarButton.disabled = true;
+      calendarButton.title = 'Calendar export unavailable: check the event dates and time zone.';
+    }
+  };
+
   const copyShareLink = async url => {
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(url);
@@ -572,6 +647,7 @@
     modal.querySelector('.kk-modal-meta').innerHTML = buildModalMeta(event);
     modal.querySelector('.kk-modal-link').href = event.registration || event.url;
     prepareShareMenu(event);
+    prepareCalendarMenu(event);
     modal.hidden = false;
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('kk-modal-open');
@@ -581,6 +657,7 @@
 
   const closeModal = (updateUrl = true) => {
     closeShareMenu();
+    closeCalendarMenu();
     modal.hidden = true;
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('kk-modal-open');
@@ -618,7 +695,8 @@
     if (event.target.closest('[data-close-day-modal]')) closeDayModal();
     if (event.target.closest('[data-close-modal]')) closeModal();
 
-    if (event.target.closest('.kk-share-button') && activeEvent) {
+    if (event.target.closest('.kk-share > .kk-share-button') && activeEvent) {
+      closeCalendarMenu();
       const url = shareUrlFor(activeEvent);
       const useNativeShare = navigator.share && (navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches);
       if (useNativeShare) {
@@ -646,6 +724,24 @@
       }
     }
 
+    if (event.target.closest('.kk-calendar-export-button') && calendarExport) {
+      closeShareMenu();
+      calendarMenu.hidden = !calendarMenu.hidden;
+      calendarButton.setAttribute('aria-expanded', String(!calendarMenu.hidden));
+    }
+    if (event.target.closest('[data-calendar-download]') && calendarExport) {
+      const url = URL.createObjectURL(new Blob([calendarExport.ics], {type: 'text/calendar;charset=utf-8'}));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${activeEvent.slug || 'kendo-event'}.ics`;
+      link.addEventListener('click', e => e.stopPropagation());
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      calendarStatus.textContent = 'Calendar file downloaded. Open or import it in your calendar app.';
+    }
+    if (!event.target.closest('.kk-calendar-export')) closeCalendarMenu();
     if (!event.target.closest('.kk-share')) closeShareMenu();
 
     const viewButton = event.target.closest('[data-view]');
@@ -701,7 +797,10 @@
   });
 
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && !shareMenu.hidden) {
+    if (event.key === 'Escape' && !calendarMenu.hidden) {
+      closeCalendarMenu();
+      calendarButton.focus();
+    } else if (event.key === 'Escape' && !shareMenu.hidden) {
       closeShareMenu();
       shareButton.focus();
     } else if (event.key === 'Escape' && !dayModal.hidden) {
@@ -742,7 +841,13 @@
   });
   syncCalendarModeButtons();
   organiseEventLists();
+  const cards = [...mainEventList.querySelectorAll('.kk-card')];
+  events.forEach(event => {
+    const card = cards.find(card => card.querySelector('[data-event-id]')?.dataset.eventId === String(event.id));
+    if (card) mainEventList.appendChild(card);
+  });
   updateFilters();
+  document.querySelector(`[data-view="${app.dataset.defaultView || 'list'}"]`)?.click();
 
   const hashMatch = window.location.hash.match(/^#event=(.+)$/);
   if (hashMatch) {

@@ -6,7 +6,7 @@ KendoKaizen is a WordPress agenda for European kendo seminars, competitions, gra
 
 ### Current development snapshot
 
-The current preview is Playground/theme v0.8.11 (timeline), based on the supplied v0.8.6 export. Use branch `codex/event-collection-review`. See [TIMELINE.md](TIMELINE.md) for behaviour, validation and ZIP packaging, and [PROJECT_STATUS.md](PROJECT_STATUS.md) for branch roles. The approved stable baseline remains v1.0.0; this preview has not been promoted to stable.
+The approved source is Playground/theme v0.8.14 on `main`: Home opens the upcoming calendar and Kirikaeshi carousel; Archive provides a compact monthly list with year/month filters; Contact contains the contact and event-submission forms. Calendar flags/export and the country timeline with PDF export are included. See [archive notes](docs/archive-preview-v0.8.14.md), [page notes](docs/pages-preview-v0.8.13.md) and [PROJECT_STATUS.md](PROJECT_STATUS.md). `stable/v1.0.0` remains the historical baseline.
 
 Event Pipeline 17 was inspected locally; the simplified review/upload tab is still planned and has not been implemented. Spreadsheets and full Playground ZIPs remain external backups.
 
@@ -18,7 +18,7 @@ The stable baseline is defined by the following paired project artifacts:
 - WordPress Playground: `wordpress-playground_v6.7-practical-info-complete-v0.7.9-importer-parser-tec-fix.zip`
 - Event database: `KendoKaizen_Event_Pipeline_11_refetched_sources.xlsx`
 
-This is the reference point for the first production deployment. Further development should branch from this state rather than from earlier Playground experiments.
+This is the reference point for the first production deployment. New development should branch from the current `main`; this baseline remains available for historical reference.
 
 The complete Playground exports are intentionally kept outside Git because they include WordPress core, plugins, database state and uploads. Their iteration history is documented in [PLAYGROUND_VERSIONS.md](PLAYGROUND_VERSIONS.md) and [CHANGELOG.md](CHANGELOG.md).
 

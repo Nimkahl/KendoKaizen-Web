@@ -8,11 +8,12 @@ function kk_enqueue_assets() {
     wp_enqueue_style('kadence-parent', get_template_directory_uri() . '/style.css', [], wp_get_theme('kadence')->get('Version'));
     wp_enqueue_style('kendokaizen', get_stylesheet_uri(), ['kadence-parent'], wp_get_theme()->get('Version'));
 
-    if (is_front_page()) {
+    if (is_front_page() || is_page_template(['page-archive.php', 'page-contact.php'])) {
         wp_enqueue_script('kendokaizen-jspdf', get_stylesheet_directory_uri() . '/assets/pdf/jspdf.umd.min.js', [], wp_get_theme()->get('Version'), true);
         wp_enqueue_script('kendokaizen-pdf-font', get_stylesheet_directory_uri() . '/assets/pdf/font.js', [], wp_get_theme()->get('Version'), true);
         wp_enqueue_script('kendokaizen-timeline', get_stylesheet_directory_uri() . '/timeline.js', ['kendokaizen-jspdf', 'kendokaizen-pdf-font'], wp_get_theme()->get('Version'), true);
-        wp_enqueue_script('kendokaizen-app', get_stylesheet_directory_uri() . '/app.js', ['kendokaizen-timeline'], wp_get_theme()->get('Version'), true);
+        wp_enqueue_script('kendokaizen-calendar-export', get_stylesheet_directory_uri() . '/calendar-export.js', [], wp_get_theme()->get('Version'), true);
+        wp_enqueue_script('kendokaizen-app', get_stylesheet_directory_uri() . '/app.js', ['kendokaizen-timeline', 'kendokaizen-calendar-export'], wp_get_theme()->get('Version'), true);
     }
 }
 add_action('wp_enqueue_scripts', 'kk_enqueue_assets');
@@ -371,6 +372,27 @@ function kk_event_date_label($start, $end) {
     return wp_date('j M', $start_ts) . ' – ' . wp_date('j M Y', $end_ts);
 }
 
+// Export timing independently of the date-only values used by the views.
+function kk_calendar_timing($id, $start, $end) {
+    $all_day_meta = strtolower((string) get_post_meta($id, '_EventAllDay', true));
+    $all_day = in_array($all_day_meta, ['yes', '1', 'true'], true)
+        || !preg_match('/\d{2}:\d{2}/', $start)
+        || ($all_day_meta === '' && substr($start, 11) === '00:00:00');
+    $timezone = get_post_meta($id, '_EventTimezone', true) ?: wp_timezone_string();
+    $result = ['allDay' => $all_day, 'timeZone' => $timezone, 'startUtc' => '', 'endUtc' => ''];
+    if (!$all_day) {
+        try {
+            $zone = new DateTimeZone($timezone);
+            $utc = new DateTimeZone('UTC');
+            $result['startUtc'] = (new DateTimeImmutable($start, $zone))->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+            $result['endUtc'] = (new DateTimeImmutable($end, $zone))->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        } catch (Exception $error) {
+            // Keep unavailable timing explicit rather than guessing a time zone.
+        }
+    }
+    return $result;
+}
+
 function kk_collect_events() {
     $query = new WP_Query([
         'post_type' => 'tribe_events',
@@ -388,6 +410,7 @@ function kk_collect_events() {
         $start = kk_event_meta($id, '_EventStartDate');
         $end = kk_event_meta($id, '_EventEndDate', $start);
         $events[] = [
+            'calendarTiming' => kk_calendar_timing($id, $start, $end),
             'id' => $id,
             'slug' => $event->post_name,
             'title' => get_the_title($id),
@@ -422,7 +445,10 @@ function kk_collect_events() {
     return $events;
 }
 
-function kk_events_shortcode() {
+function kk_events_shortcode($atts = []) {
+    $atts = shortcode_atts(['scope' => 'all', 'view' => 'list'], $atts, 'kendokaizen_events');
+    $scope = in_array($atts['scope'], ['all', 'past', 'upcoming'], true) ? $atts['scope'] : 'all';
+    $view = in_array($atts['view'], ['list', 'calendar', 'timeline'], true) ? $atts['view'] : 'list';
     $events = kk_collect_events();
     // Keep the country filter useful even when the current event subset does not
     // contain every country monitored by the KendoKaizen source pipeline.
@@ -465,14 +491,20 @@ function kk_events_shortcode() {
 
     ob_start();
     ?>
-    <section class="kk-app" aria-label="European kendo events">
+    <section class="kk-app" data-scope="<?php echo esc_attr($scope); ?>" data-default-view="<?php echo esc_attr($view); ?>" data-today="<?php echo esc_attr(wp_date('Y-m-d')); ?>" aria-label="European kendo events">
         <div class="kk-toolbar">
+            <?php if ($scope !== 'past') : ?>
             <div class="kk-view-switch" aria-label="Choose event view">
                 <button class="kk-view-button is-active" type="button" data-view="list" aria-pressed="true">List</button>
                 <button class="kk-view-button" type="button" data-view="calendar" aria-pressed="false">Calendar</button>
                 <button class="kk-view-button" type="button" data-view="timeline" aria-pressed="false">Timeline</button>
             </div>
+            <?php endif; ?>
             <div class="kk-filters">
+                <?php if ($scope === 'past') : ?>
+                    <select id="kk-year-filter" aria-label="Filter by year"><option value="">All years</option></select>
+                    <select id="kk-month-filter" aria-label="Filter by month"><option value="">All months</option><?php for ($month = 1; $month <= 12; $month++) : ?><option value="<?php echo esc_attr(sprintf('%02d', $month)); ?>"><?php echo esc_html(date('F', mktime(12, 0, 0, $month, 1, 2026))); ?></option><?php endfor; ?></select>
+                <?php endif; ?>
                 <select id="kk-country-filter" aria-label="Filter by country">
                     <option value="">All countries</option>
                     <?php foreach ($countries as $country) : ?>
@@ -640,6 +672,17 @@ function kk_events_shortcode() {
                             <p class="kk-share-status" aria-live="polite"></p>
                         </div>
                     </div>
+                    <div class="kk-calendar-export">
+                        <button class="kk-share-button kk-calendar-export-button" type="button" aria-expanded="false" aria-controls="kk-calendar-export-menu">Add to calendar</button>
+                        <div class="kk-share-menu kk-calendar-export-menu" id="kk-calendar-export-menu" hidden>
+                            <a data-calendar-provider="google" target="_blank" rel="noopener noreferrer">Google Calendar</a>
+                            <a data-calendar-provider="outlook" target="_blank" rel="noopener noreferrer">Outlook.com</a>
+                            <a data-calendar-provider="office" target="_blank" rel="noopener noreferrer">Microsoft 365</a>
+                            <button type="button" data-calendar-download>Apple Calendar / other calendars — download .ics</button>
+                            <p class="kk-share-status" data-calendar-status aria-live="polite"></p>
+                            <p class="kk-share-status">Saves a copy. Future event changes are not synced.</p>
+                        </div>
+                    </div>
                 </div>
                 <p class="kk-modal-responsibility">This event is run by its organiser, not KendoKaizen. Details may change; <a href="#event-information">please confirm them with the organiser</a>.</p>
             </div>
@@ -651,7 +694,7 @@ function kk_events_shortcode() {
 add_shortcode('kendokaizen_events', 'kk_events_shortcode');
 
 function kk_redirect_home_with_status($status, $anchor = 'contact') {
-    $url = add_query_arg('kk_status', sanitize_key($status), home_url('/')) . '#' . rawurlencode($anchor);
+    $url = add_query_arg('kk_status', sanitize_key($status), kk_page_url('contact')) . '#' . rawurlencode($anchor);
     wp_safe_redirect($url);
     exit;
 }
@@ -787,3 +830,33 @@ function kk_handle_event_submission() {
 }
 add_action('admin_post_nopriv_kk_submit_event', 'kk_handle_event_submission');
 add_action('admin_post_kk_submit_event', 'kk_handle_event_submission');
+
+// Provision the two pages once for an existing Playground or a fresh installation.
+function kk_setup_site_pages() {
+    if (get_option('kk_site_pages_version') === '1') return;
+    foreach (['archive' => 'Archive', 'contact' => 'Contact'] as $slug => $title) {
+        $page = get_page_by_path($slug);
+        if ($page && get_page_template_slug($page->ID) === 'page-' . $slug . '.php') {
+            $id = $page->ID;
+        } else {
+            $id = wp_insert_post([
+                'post_type' => 'page', 'post_status' => 'publish',
+                'post_title' => $title, 'post_name' => $slug,
+                'meta_input' => ['_wp_page_template' => 'page-' . $slug . '.php'],
+            ], true);
+        }
+        if (is_wp_error($id) || !$id) return;
+        update_option('kk_' . $slug . '_page_id', (int) $id);
+    }
+    update_option('kk_site_pages_version', '1');
+}
+add_action('init', 'kk_setup_site_pages', 20);
+
+function kk_page_url($slug) {
+    $id = (int) get_option('kk_' . $slug . '_page_id');
+    return $id ? get_permalink($id) : home_url('/' . $slug . '/');
+}
+add_filter('body_class', function ($classes) {
+    if (is_front_page() || is_page_template(['page-archive.php', 'page-contact.php'])) $classes[] = 'kk-site';
+    return $classes;
+});
