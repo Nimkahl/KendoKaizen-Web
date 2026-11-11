@@ -1,6 +1,33 @@
+## v0.8.12 — Calendar flags and event export (local preview)
+
+## v0.8.14 — approved source integration
+
+Home, Contact and the compact monthly Archive are included, together with v0.8.12 calendar flags/export and v0.8.11 timeline/PDF features. Archive defaults to all completed events, grouped newest-first, with year/month/country/type filters. Existing importer files are preserved. Desktop/mobile browser checks and 11 calendar/timeline unit checks passed. Export: `wordpress-playground_v0.8.14-archive-preview.zip` (kept outside Git). No production server deployment.
+
+- Country flag before the event-type icon in Calendar view, including accessible country labels.
+- Shared event popup offers Google Calendar, Outlook.com, Microsoft 365 and portable .ics export.
+- Includes practical details; preserves all-day dates and stored event time zones. Oversized provider links fall back to the complete file.
+- Separate local branch `codex/calendar-flags-and-export`; no GitHub update or deployment yet.
+- Validation: 11 Node tests, desktop/mobile browser checks, menu/keyboard/download checks, timeline country ordering and PDF regressions. No imports into personal calendar accounts were performed.
+
 # Changelog
 
 This repository tracks the reusable KendoKaizen WordPress code and the development history of the accompanying WordPress Playground builds.
+
+## Development — theme v0.8.11
+
+- Grouped timeline by country with inline selection and alphabetical active/hidden sections.
+- Added Tick all / Untick all and full-date-range reset.
+- Changed timeline controls to rectangular buttons.
+- Added local PDF download for active countries, filters and dates, split into monthly landscape pages.
+- Bundled jsPDF and Liberation Sans with their licenses; no external CDN is required.
+
+## Development — theme v0.8.7 — 10 November 2026
+
+- Synchronized the supplied v0.8.6 theme and assets.
+- Added the timeline with flags, shared filters, inclusive dates and split category colours.
+- Included date-model tests and a ZIP packager preserving all other archive entries.
+- Included the importer source from the supplied v0.8.6 export, without changing its behaviour.
 
 ## 1.0.0 — First stable baseline — 9 October 2026
 

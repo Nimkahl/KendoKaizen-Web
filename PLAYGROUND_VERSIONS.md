@@ -1,5 +1,9 @@
 # WordPress Playground version history
 
+## v0.8.14 — approved source integration
+
+Home, Contact and the compact monthly Archive are included, together with v0.8.12 calendar flags/export and v0.8.11 timeline/PDF features. Archive defaults to all completed events, grouped newest-first, with year/month/country/type filters. Existing importer files are preserved. Desktop/mobile browser checks and 11 calendar/timeline unit checks passed. Export: `wordpress-playground_v0.8.14-archive-preview.zip` (kept outside Git). No production server deployment.
+
 KendoKaizen was iterated extensively in WordPress Playground during October 2026.
 
 **Latest stable Playground reference: v0.7.9.**
@@ -8,6 +12,14 @@ The first stable project baseline, **KendoKaizen v1.0.0**, was declared on **9 O
 
 - `wordpress-playground_v6.7-practical-info-complete-v0.7.9-importer-parser-tec-fix.zip`
 - `KendoKaizen_Event_Pipeline_11_refetched_sources.xlsx`
+
+## Current development
+
+- v0.8.11: current preview with country rows, inline checkboxes, alphabetical active/hidden groups, Tick all / Untick all, rectangular controls and PDF download. ZIP: `wordpress-playground_v0.8.11-timeline-pdf-preview.zip`.
+
+- v0.8.6: supplied baseline with event disclaimer, contact/submission forms and current theme assets.
+- v0.8.7: timeline preview, country flags, three-month navigation and split type colours. ZIP: `wordpress-playground_v0.8.7-timeline.zip`.
+- Stable baseline remains v0.7.9 / project v1.0.0 until explicitly promoted.
 
 ## Export sequence
 
