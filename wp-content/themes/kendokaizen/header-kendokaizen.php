@@ -37,6 +37,7 @@
                     <a href="<?php echo esc_url(home_url('/')); ?>" <?php if (is_front_page()) echo 'aria-current="page"'; ?>>Home</a>
                     <a href="<?php echo esc_url(kk_page_url('archive')); ?>" <?php if (is_page_template('page-archive.php')) echo 'aria-current="page"'; ?>>Archive</a>
                     <a href="<?php echo esc_url(kk_page_url('contact')); ?>" <?php if (is_page_template('page-contact.php')) echo 'aria-current="page"'; ?>>Contact</a>
+                    <a href="<?php echo esc_url(kk_page_url('about-us')); ?>" <?php if (is_page_template('page-about-us.php')) echo 'aria-current="page"'; ?>>About us</a>
                 </nav>
                 <div class="kk-theme-switch" role="group" aria-label="Colour theme">
                     <button class="kk-theme-button" type="button" data-theme-choice="light" aria-label="Use light theme" aria-pressed="false">

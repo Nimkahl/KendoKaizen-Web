@@ -4,7 +4,7 @@ Theme URI: https://example.com/kendokaizen
 Description: Kadence child theme for the KendoKaizen European kendo events agenda.
 Author: KendoKaizen
 Template: kadence
-Version: 0.8.14
+Version: 0.8.28
 Text Domain: kendokaizen
 */
 
@@ -2558,3 +2558,85 @@ body.kk-site button.kk-archive-row:focus-visible { outline: 2px solid var(--kk-r
  .kk-archive-arrow { grid-column: 3; grid-row: 1; }
  .kk-archive-date strong { font-size: 15px; }
 }
+
+/* Home organiser sidebar and linked submission guide. */
+.kk-home-layout { display: grid; grid-template-columns: minmax(0, 1fr) 285px; gap: 24px; align-items: start; }
+.kk-home-layout #events { min-width: 0; }
+.kk-home-layout .kk-toolbar, .kk-home-layout .kk-filters { flex-wrap: wrap; }
+.kk-organiser-card { padding: 24px; border: 1px solid var(--kk-line); border-radius: 6px; background: var(--kk-red); color: #171c21; }
+.kk-organiser-eyebrow { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; margin: 0 0 12px; }
+body.kk-site .kk-organiser-card h2 { font-family: inherit; font-size: 23px; font-weight: 800; line-height: 1.2; margin: 0 0 14px; color: #171c21; }
+.kk-organiser-card > p:not(.kk-organiser-eyebrow) { font-size: 14px; line-height: 1.6; margin: 0 0 20px; }
+.kk-organiser-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.kk-organiser-actions a, .kk-how-actions .kk-organiser-contact { display: inline-flex; align-items: center; justify-content: center; padding: 11px 14px; font-size: 13px; font-weight: 750; text-decoration: none; border: 1px solid #171c21; border-radius: 4px; }
+body.kk-site a.kk-organiser-contact { background: #171c21; color: #fff; }
+body.kk-site a.kk-organiser-how { background: #fff3eb; color: #171c21; border-color: transparent; }
+body.kk-site .kk-organiser-actions a:hover, body.kk-site .kk-how-actions .kk-organiser-contact:hover { background: #303840; color: #fff; }
+.kk-organiser-actions a:focus-visible, .kk-how-actions a:focus-visible { outline: 3px solid var(--kk-ink); outline-offset: 3px; }
+.kk-how-content { max-width: 860px; margin: 0 auto; padding: 32px; background: var(--kk-white); border: 1px solid var(--kk-line); border-radius: 6px; }
+.kk-how-steps { padding-left: 26px; margin: 0; }
+.kk-how-steps li { padding: 0 0 24px 10px; }
+.kk-how-steps li::marker { color: var(--kk-gold); font-weight: 800; }
+body.kk-site .kk-how-content h2 { font-size: 23px; margin: 0 0 10px; }
+.kk-how-content p { color: var(--kk-muted); line-height: 1.7; }
+.kk-how-note { border-top: 1px solid var(--kk-line); padding-top: 24px; }
+.kk-how-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; margin-top: 24px; }
+@media (max-width: 1100px) { .kk-home-layout { grid-template-columns: minmax(0, 1fr); } .kk-organiser-card { max-width: 600px; } }
+@media (max-width: 600px) { .kk-how-content { padding: 22px 16px; } }
+
+.kk-home-sidebar { display: grid; gap: 24px; min-width: 0; }
+.kk-map-card { border: 1px solid var(--kk-line); border-radius: 6px; overflow: hidden; background: var(--kk-white); }
+.kk-map-card > header { padding: 15px; background: #171c21; color: white; }
+body.kk-site .kk-map-card h2 { font-family: inherit; color: white; font-size: 16px; text-transform: uppercase; letter-spacing: .1em; margin: 0 0 5px; }
+#kk-map-count { font-size: 12px; }
+#kk-events-map { height: 350px; width: 100%; z-index: 0; background: #dce3e7; }
+#kk-map-status { padding: 12px; margin: 0; font-size: 12px; color: var(--kk-muted); }
+.kk-map-locations { padding: 0 12px 14px; font-size: 13px; }
+.kk-map-locations summary { cursor: pointer; }
+.kk-map-locations button { display: block; width: 100%; text-align: left; margin: 8px 0; }
+.kk-map-pin { background: #171c21; color: white; border: 3px solid #ff935c; border-radius: 50%; text-align: center; font: 800 14px/30px sans-serif; box-shadow: 0 2px 5px #0005; }
+.kk-map-pin:focus-visible { outline: 3px solid #171c21; outline-offset: 3px; }
+.kk-map-popup { color: #171c21; }
+.kk-map-popup button { display: block; margin: 8px 0; padding: 8px; border-radius: 4px; background: #171c21; color: white; text-align: left; }
+.kk-map-card .leaflet-control-zoom a { background: white; color: #171c21; }
+.kk-map-card .leaflet-control-attribution { font-size: 10px; color: #171c21; }
+
+/* Upcoming list: compact poster thumbnails and monthly sections. */
+#kk-list-month-filter[hidden], .kk-list-month[hidden] { display: none; }
+.kk-list-month { display: grid; gap: 10px; margin-bottom: 18px; }
+body.kk-site .kk-list-month > h2 { margin: 0 0 3px; padding: 12px 16px; border-left: 4px solid var(--kk-red); border-radius: 4px; background: var(--kk-paper-deep); font-family: inherit; font-size: 16px; font-weight: 800; letter-spacing: .03em; }
+.kk-list-month .kk-card { grid-template-columns: 64px minmax(0, 1fr) 115px; gap: 14px; padding: 12px; border-radius: 6px; }
+.kk-list-month .kk-poster { width: 64px; height: 86px; aspect-ratio: auto; border-radius: 4px; background: var(--kk-paper-deep); }
+.kk-list-month .kk-poster img { object-fit: contain; }
+body.kk-site .kk-list-month .kk-card h2 { font-size: 18px; line-height: 1.3; margin: 0 0 5px; }
+.kk-list-month .kk-card-topline { font-size: 10px; gap: 5px; margin: 0 0 6px; }
+.kk-list-month .kk-card-location { font-size: 12px; margin: 0; }
+.kk-list-month .kk-card-summary { display: none; }
+.kk-list-month .kk-card-side { grid-column: auto; display: block; min-width: 0; padding: 0 0 0 10px; text-align: right; border-left: 1px solid var(--kk-line); }
+.kk-list-month .kk-price { font-family: inherit; font-size: 11px; margin-bottom: 8px; }
+.kk-list-month .kk-event-button { padding: 8px 10px; border-radius: 4px; font-size: 11px; }
+@media(max-width:600px) {
+ .kk-list-month .kk-card { grid-template-columns: 48px minmax(0,1fr); gap: 10px; }
+ .kk-list-month .kk-poster { width: 48px; height: 66px; }
+ body.kk-site .kk-list-month .kk-card h2 { font-size: 16px; }
+ .kk-list-month .kk-card-side { grid-column: 2; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 0; border: 0; text-align: left; }
+ .kk-list-month .kk-price { margin: 0; }
+}
+
+.kk-sidebar-about { padding: 22px; background: var(--kk-white); border: 1px solid var(--kk-line); border-left: 3px solid var(--kk-red); border-radius: 6px; }
+body.kk-site .kk-sidebar-about h2 { font-family: inherit; font-size: 19px; margin: 0 0 12px; }
+.kk-sidebar-about p { font-size: 13px; line-height: 1.7; color: var(--kk-muted); margin: 0 0 16px; }
+.kk-sidebar-about a { font-size: 13px; font-weight: 700; color: var(--kk-ink); text-decoration: underline; }
+.kk-about-page .kk-event-disclaimer { margin-top: 0; }
+
+.kk-about-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; align-items: stretch; }
+.kk-about-grid .kk-event-disclaimer { width: 100%; max-width: none; margin: 0; min-width: 0; }
+.kk-creator-image { display: block; width: 100%; height: auto; max-height: 270px; object-fit: contain; background: #fff; border-radius: 6px; margin: 20px 0; }
+.kk-creator-motto { padding-top: 12px; font-size: 18px; color: var(--kk-ink); }
+@media (max-width: 850px) { .kk-about-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Mascot fits the remaining space in the creator card. */
+.kk-creator-fox { display: block; width: 280px; max-width: 85%; height: auto; aspect-ratio: 1; object-fit: contain; margin: 10px -16px -12px auto; }
+
+/* Keep the Contact page title readable in both colour themes. */
+body.kk-site .kk-contact-heading h1 { color: var(--kk-ink); }

@@ -1,5 +1,9 @@
 ## v0.8.12 — Calendar flags and event export (local preview)
 
+## v0.8.28 — approved home and About updates
+
+Includes the event map with zoom-dependent clusters, organiser contact card and submission guide, compact monthly upcoming list with list-only month filter, sidebar About notice, About us page with fox mascot, and Contact heading dark-mode fix. Supersedes the intermediate watermark experiments. Export: `wordpress-playground_v0.8.28-contact-dark-mode-preview.zip` (outside Git). Existing importer and event data are unchanged. Map locations use six verified city centres unless saved venue coordinates exist; new unknown cities require coordinates. Background tiles require internet. Prior browser checks used mocked map tiles. Eleven unit tests pass; the source theme matches the reviewed ZIP. No server deployment or social-media connection included.
+
 ## v0.8.14 — approved source integration
 
 Home, Contact and the compact monthly Archive are included, together with v0.8.12 calendar flags/export and v0.8.11 timeline/PDF features. Archive defaults to all completed events, grouped newest-first, with year/month/country/type filters. Existing importer files are preserved. Desktop/mobile browser checks and 11 calendar/timeline unit checks passed. Export: `wordpress-playground_v0.8.14-archive-preview.zip` (kept outside Git). No production server deployment.
