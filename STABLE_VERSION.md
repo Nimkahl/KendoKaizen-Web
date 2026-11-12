@@ -1,5 +1,18 @@
 # KendoKaizen stable version manifest
 
+## v0.8.30 — current approved application baseline
+
+Declared stable by the project owner on 12 November 2026. This is the current source baseline on `main`; the earlier v1.0.0 entry below remains a historical snapshot under its original numbering.
+
+Export: `wordpress-playground_v0.8.30-quarter-timeline-preview.zip` (stored outside Git).
+
+SHA-256: `c9226334e4fa206c8a3dd08974cc34bbececd219f8177b647694bd05282c34b6`
+
+Timeline rows are grouped by event type, with flags inside bars and names below. Multi-type events appear in each relevant row; uncategorised events remain visible in Other events. Year and calendar-quarter selectors replace Today/All dates; arrows move through complete quarters across year boundaries. Country filters and PDF export are retained.
+
+Validation: 11 existing unit tests pass. Browser checks covered type grouping, country selection, event popup, PDF download, all four quarters, Q4/Q1 transitions in both directions, synced selectors and mobile overflow. This is an approved application snapshot, not a production-server deployment. Calendar-app saving and live map tile availability retain the previously documented limitations. Event data and importer are unchanged.
+
+
 ## v1.0.0
 
 **Declared:** 9 October 2026  
