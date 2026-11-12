@@ -8,14 +8,36 @@
             <p class="kk-hero-copy">Seminars, competitions, gradings and more. Kendo all across Europe.</p>
         </section>
 
-        <aside class="kk-event-notice" aria-label="About event listings">
-            <span class="kk-event-notice-mark" aria-hidden="true">i</span>
-            <p><strong>Independent community calendar.</strong> KendoKaizen shares event information; each event is organised by its listed organiser. Details can change, so please confirm them with the organiser before making plans.</p>
-            <a href="#event-information">How event information works</a>
-        </aside>
 
+
+        <div class="kk-home-layout">
         <div id="events">
             <?php echo do_shortcode('[kendokaizen_events scope="upcoming" view="calendar"]'); ?>
+        </div>
+
+        <aside class="kk-home-sidebar" aria-label="Event map and organiser information">
+            <section class="kk-map-card" aria-labelledby="kk-map-title">
+                <header><h2 id="kk-map-title">Event map</h2><span id="kk-map-count" aria-live="polite"></span></header>
+                <div id="kk-events-map" role="region" aria-label="Map of upcoming events in Europe"></div>
+                <p id="kk-map-status" aria-live="polite">Loading event locations…</p>
+                <details class="kk-map-locations"><summary>Browse locations</summary><p>City coordinates: <a href="https://www.geonames.org/">GeoNames</a>, via <a href="https://open-meteo.com/en/docs/geocoding-api">Open-Meteo</a>.</p><div id="kk-map-location-list"></div></details>
+            </section>
+            <section class="kk-organiser-card" aria-labelledby="kk-organiser-title">
+                <p class="kk-organiser-eyebrow">For organisers</p>
+                <h2 id="kk-organiser-title">Organising a competition?</h2>
+                <p>Share your competition, seminar or grading with the Kendo community. Send us the details for review and publication on KendoKaizen.</p>
+                <div class="kk-organiser-actions">
+                    <a class="kk-organiser-contact" href="<?php echo esc_url(kk_page_url('contact')); ?>">Contact us</a>
+                    <a class="kk-organiser-how" href="<?php echo esc_url(kk_page_url('how-it-works')); ?>">How it works</a>
+                </div>
+            </section>
+        <section class="kk-sidebar-about" aria-labelledby="kk-sidebar-about-title">
+            <h2 id="kk-sidebar-about-title">About</h2>
+
+            <p><strong>Independent community calendar.</strong> KendoKaizen shares event information; each event is organised by its listed organiser. Details can change, so please confirm them with the organiser before making plans.</p>
+            <a href="<?php echo esc_url(kk_page_url('about-us')); ?>">How event information works</a>
+        </section>
+        </aside>
         </div>
 
         <section class="kk-partner" id="kirikaeshi" aria-label="Kirikaeshi collaborator">
@@ -81,13 +103,7 @@
             </div>
         </section>
 
-        <section class="kk-event-disclaimer" id="event-information" aria-labelledby="kk-event-disclaimer-title">
-            <p class="kk-eyebrow">Please check with the organiser</p>
-            <h2 id="kk-event-disclaimer-title">About event information</h2>
-            <p>KendoKaizen is an independent community calendar. Unless a listing says otherwise, KendoKaizen is not the organiser or an official representative of the events featured here. Listings are shared for information and are compiled from organiser submissions and publicly available sources.</p>
-            <p>Event organisers are responsible for their own events and decisions, including the programme, eligibility, fees, registration, venue, and any changes, postponements, cancellations or refunds. Event details may be incomplete or change after publication. Please use the official event link or contact the organiser to confirm the latest information before registering, booking travel or attending.</p>
-            <p>If you notice an error or an outdated listing, <a href="<?php echo esc_url(kk_page_url('contact')); ?>">please contact KendoKaizen</a>.</p>
-        </section>
+
     </main>
 
 <?php get_footer('kendokaizen'); ?>

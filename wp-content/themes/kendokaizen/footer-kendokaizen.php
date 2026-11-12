@@ -5,7 +5,7 @@
             <?php if ($kk_footer_privacy_url) : ?>
                 <a class="kk-footer-link" href="<?php echo esc_url($kk_footer_privacy_url); ?>">Privacy Policy</a>
             <?php endif; ?>
-            <a class="kk-footer-link" href="<?php echo esc_url(home_url('/#event-information')); ?>">Event information</a>
+            <a class="kk-footer-link" href="<?php echo esc_url(kk_page_url('about-us')); ?>">About us</a>
         </div>
     </footer>
 </div>

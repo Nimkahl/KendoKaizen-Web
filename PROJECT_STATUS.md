@@ -1,6 +1,6 @@
 # Project status
 
-- `main`: approved v0.8.14 source, with Home, monthly Archive and Contact pages; calendar flags/export and the country timeline/PDF features included.
+- `main`: approved v0.8.28 source, with Home, monthly Archive and Contact pages; calendar flags/export and the country timeline/PDF features included.
 - `codex/archive-and-contact-pages`: integration branch for the approved v0.8.14 changes.
 - `codex/event-collection-review`: preserved v0.8.11 timeline preview history.
 - `stable/v1.0.0`: historical baseline retained unchanged.
@@ -8,3 +8,5 @@
 - `feature/published-review-indicators`: separate experiment, not integrated.
 
 Full Playground ZIPs and spreadsheets remain outside Git. This promotion updates repository source only; no server deployment is performed. Provider calendar links still need authenticated calendar-app confirmation; portable ICS validation passed. Spreadsheet synchronization and automated event collection remain separate follow-up work.
+
+The v0.8.28 update adds the upcoming-event cluster map, organiser sidebar and submission guide, compact upcoming list with its own month filter, About us page with the fox mascot, and readable Contact heading in dark mode. See docs/event-map-v0.8.16.md and docs/compact-list-v0.8.17.md. Integration branch: `codex/home-organiser-widget`.

@@ -8,12 +8,20 @@ function kk_enqueue_assets() {
     wp_enqueue_style('kadence-parent', get_template_directory_uri() . '/style.css', [], wp_get_theme('kadence')->get('Version'));
     wp_enqueue_style('kendokaizen', get_stylesheet_uri(), ['kadence-parent'], wp_get_theme()->get('Version'));
 
-    if (is_front_page() || is_page_template(['page-archive.php', 'page-contact.php'])) {
+    if (is_front_page()) {
+        $map_uri = get_stylesheet_directory_uri() . '/assets/map/';
+        wp_enqueue_style('kk-leaflet', $map_uri . 'leaflet.css', [], '1.9.4');
+        wp_enqueue_style('kk-markercluster', $map_uri . 'MarkerCluster.css', ['kk-leaflet'], '1.5.3');
+        wp_enqueue_script('kk-leaflet', $map_uri . 'leaflet.js', [], '1.9.4', true);
+        wp_enqueue_script('kk-markercluster', $map_uri . 'markercluster.js', ['kk-leaflet'], '1.5.3', true);
+        wp_enqueue_script('kk-event-map', get_stylesheet_directory_uri() . '/event-map.js', ['kk-markercluster'], wp_get_theme()->get('Version'), true);
+    }
+    if (is_front_page() || is_page_template(['page-archive.php', 'page-contact.php', 'page-how-it-works.php', 'page-about-us.php'])) {
         wp_enqueue_script('kendokaizen-jspdf', get_stylesheet_directory_uri() . '/assets/pdf/jspdf.umd.min.js', [], wp_get_theme()->get('Version'), true);
         wp_enqueue_script('kendokaizen-pdf-font', get_stylesheet_directory_uri() . '/assets/pdf/font.js', [], wp_get_theme()->get('Version'), true);
         wp_enqueue_script('kendokaizen-timeline', get_stylesheet_directory_uri() . '/timeline.js', ['kendokaizen-jspdf', 'kendokaizen-pdf-font'], wp_get_theme()->get('Version'), true);
         wp_enqueue_script('kendokaizen-calendar-export', get_stylesheet_directory_uri() . '/calendar-export.js', [], wp_get_theme()->get('Version'), true);
-        wp_enqueue_script('kendokaizen-app', get_stylesheet_directory_uri() . '/app.js', ['kendokaizen-timeline', 'kendokaizen-calendar-export'], wp_get_theme()->get('Version'), true);
+        wp_enqueue_script('kendokaizen-app', get_stylesheet_directory_uri() . '/app.js', array_merge(['kendokaizen-timeline', 'kendokaizen-calendar-export'], is_front_page() ? ['kk-event-map'] : []), wp_get_theme()->get('Version'), true);
     }
 }
 add_action('wp_enqueue_scripts', 'kk_enqueue_assets');
@@ -410,6 +418,7 @@ function kk_collect_events() {
         $start = kk_event_meta($id, '_EventStartDate');
         $end = kk_event_meta($id, '_EventEndDate', $start);
         $events[] = [
+            'mapLocation' => kk_map_location($id),
             'calendarTiming' => kk_calendar_timing($id, $start, $end),
             'id' => $id,
             'slug' => $event->post_name,
@@ -501,6 +510,7 @@ function kk_events_shortcode($atts = []) {
             </div>
             <?php endif; ?>
             <div class="kk-filters">
+                <?php if ($scope === 'upcoming') : ?><select id="kk-list-month-filter" aria-label="Filter list by month" hidden><option value="">All months</option></select><?php endif; ?>
                 <?php if ($scope === 'past') : ?>
                     <select id="kk-year-filter" aria-label="Filter by year"><option value="">All years</option></select>
                     <select id="kk-month-filter" aria-label="Filter by month"><option value="">All months</option><?php for ($month = 1; $month <= 12; $month++) : ?><option value="<?php echo esc_attr(sprintf('%02d', $month)); ?>"><?php echo esc_html(date('F', mktime(12, 0, 0, $month, 1, 2026))); ?></option><?php endfor; ?></select>
@@ -684,7 +694,7 @@ function kk_events_shortcode($atts = []) {
                         </div>
                     </div>
                 </div>
-                <p class="kk-modal-responsibility">This event is run by its organiser, not KendoKaizen. Details may change; <a href="#event-information">please confirm them with the organiser</a>.</p>
+                <p class="kk-modal-responsibility">This event is run by its organiser, not KendoKaizen. Details may change; <a href="<?php echo esc_url(kk_page_url('about-us')); ?>">please confirm them with the organiser</a>.</p>
             </div>
         </article>
     </div>
@@ -831,10 +841,10 @@ function kk_handle_event_submission() {
 add_action('admin_post_nopriv_kk_submit_event', 'kk_handle_event_submission');
 add_action('admin_post_kk_submit_event', 'kk_handle_event_submission');
 
-// Provision the two pages once for an existing Playground or a fresh installation.
+// Provision the site pages once for an existing Playground or a fresh installation.
 function kk_setup_site_pages() {
-    if (get_option('kk_site_pages_version') === '1') return;
-    foreach (['archive' => 'Archive', 'contact' => 'Contact'] as $slug => $title) {
+    if (get_option('kk_site_pages_version') === '3') return;
+    foreach (['archive' => 'Archive', 'contact' => 'Contact', 'how-it-works' => 'How it works', 'about-us' => 'About us'] as $slug => $title) {
         $page = get_page_by_path($slug);
         if ($page && get_page_template_slug($page->ID) === 'page-' . $slug . '.php') {
             $id = $page->ID;
@@ -848,7 +858,7 @@ function kk_setup_site_pages() {
         if (is_wp_error($id) || !$id) return;
         update_option('kk_' . $slug . '_page_id', (int) $id);
     }
-    update_option('kk_site_pages_version', '1');
+    update_option('kk_site_pages_version', '3');
 }
 add_action('init', 'kk_setup_site_pages', 20);
 
@@ -857,6 +867,19 @@ function kk_page_url($slug) {
     return $id ? get_permalink($id) : home_url('/' . $slug . '/');
 }
 add_filter('body_class', function ($classes) {
-    if (is_front_page() || is_page_template(['page-archive.php', 'page-contact.php'])) $classes[] = 'kk-site';
+    if (is_front_page() || is_page_template(['page-archive.php', 'page-contact.php', 'page-how-it-works.php', 'page-about-us.php'])) $classes[] = 'kk-site';
     return $classes;
 });
+
+// Prefer saved event coordinates, then the linked Events Calendar venue.
+function kk_map_location($id) {
+    foreach ([$id, (int) get_post_meta($id, '_EventVenueID', true)] as $source) {
+        if (!$source) continue;
+        $lat = get_post_meta($source, $source === $id ? '_kk_latitude' : '_VenueLat', true);
+        $lng = get_post_meta($source, $source === $id ? '_kk_longitude' : '_VenueLng', true);
+        if (is_numeric($lat) && is_numeric($lng) && abs((float) $lat) <= 90 && abs((float) $lng) <= 180) {
+            return ['lat' => (float) $lat, 'lng' => (float) $lng, 'precision' => 'venue'];
+        }
+    }
+    return null;
+}

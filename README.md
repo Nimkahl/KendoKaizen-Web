@@ -6,7 +6,7 @@ KendoKaizen is a WordPress agenda for European kendo seminars, competitions, gra
 
 ### Current development snapshot
 
-The approved source is Playground/theme v0.8.14 on `main`: Home opens the upcoming calendar and Kirikaeshi carousel; Archive provides a compact monthly list with year/month filters; Contact contains the contact and event-submission forms. Calendar flags/export and the country timeline with PDF export are included. See [archive notes](docs/archive-preview-v0.8.14.md), [page notes](docs/pages-preview-v0.8.13.md) and [PROJECT_STATUS.md](PROJECT_STATUS.md). `stable/v1.0.0` remains the historical baseline.
+The approved source is Playground/theme v0.8.28 on `main`: Home opens the upcoming calendar and Kirikaeshi carousel; Archive provides a compact monthly list with year/month filters; Contact contains the contact and event-submission forms. Calendar flags/export and the country timeline with PDF export are included. See [archive notes](docs/archive-preview-v0.8.14.md), [page notes](docs/pages-preview-v0.8.13.md) and [PROJECT_STATUS.md](PROJECT_STATUS.md). `stable/v1.0.0` remains the historical baseline.
 
 Event Pipeline 17 was inspected locally; the simplified review/upload tab is still planned and has not been implemented. Spreadsheets and full Playground ZIPs remain external backups.
 
@@ -63,3 +63,5 @@ The spreadsheet distinguishes event description, practical information, registra
 ## Sharing
 
 Every event modal contains a **Share event** action. Mobile browsers use the native share sheet when available. Desktop browsers offer WhatsApp, Telegram, Email and Copy link. Shared URLs reopen the event directly in the KendoKaizen interface.
+
+The v0.8.28 update adds the upcoming-event cluster map, organiser sidebar and submission guide, compact upcoming list with its own month filter, About us page with the fox mascot, and readable Contact heading in dark mode. See docs/event-map-v0.8.16.md and docs/compact-list-v0.8.17.md. Integration branch: `codex/home-organiser-widget`.

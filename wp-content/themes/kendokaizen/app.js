@@ -303,6 +303,14 @@
     return first;
   };
 
+  const listMonthFilter = document.getElementById('kk-list-month-filter');
+  if (listMonthFilter) {
+    [...new Set(events.map(event => event.start.slice(0, 7)))].sort().forEach(month => {
+      const label = new Date(`${month}-01T12:00:00`).toLocaleDateString('en-GB', {month:'long', year:'numeric'});
+      listMonthFilter.add(new Option(label, month));
+    });
+    listMonthFilter.addEventListener('change', () => updateFilters());
+  }
   const yearFilter = document.getElementById('kk-year-filter');
   const monthFilter = document.getElementById('kk-month-filter');
   if (yearFilter) {
@@ -359,7 +367,7 @@
     document.querySelectorAll('.kk-card').forEach(card => {
       const button = card.querySelector('[data-event-id]');
       const event = button ? eventsById.get(String(button.dataset.eventId)) : null;
-      const show = Boolean(button && event && allowed.has(button.dataset.eventId));
+      const show = Boolean(button && event && allowed.has(button.dataset.eventId) && (!listMonthFilter?.value || event.start.slice(0, 7) === listMonthFilter.value));
       card.hidden = !show;
       if (show) {
         visible += 1;
@@ -370,7 +378,9 @@
 
     previousEvents.hidden = scope !== 'all' || visiblePrevious === 0;
     previousCount.textContent = visiblePrevious ? `${visiblePrevious}` : '';
-    resultCount.textContent = `${visible} event${visible === 1 ? '' : 's'}`;
+    const viewCount = listPanel.hidden ? allowed.size : visible;
+    resultCount.textContent = `${viewCount} event${viewCount === 1 ? '' : 's'}`;
+    document.querySelectorAll('.kk-list-month').forEach(group => { group.hidden = !group.querySelector('.kk-card:not([hidden])'); });
     emptyState.hidden = visible !== 0;
     mainEventList.classList.toggle('is-empty', (scope === 'past' ? visible : visibleUpcoming) === 0);
     renderCalendar();
@@ -755,8 +765,8 @@
       calendarPanel.hidden = !showCalendar;
       timelinePanel.hidden = viewButton.dataset.view !== 'timeline';
       countryFilter.hidden = !timelinePanel.hidden;
-      if (showCalendar) renderCalendar();
-      renderTimeline();
+      if (listMonthFilter) listMonthFilter.hidden = listPanel.hidden;
+      updateFilters();
     }
 
     const timelineStep = event.target.closest('[data-timeline-step]');
@@ -840,12 +850,28 @@
     renderCalendar();
   });
   syncCalendarModeButtons();
+  if (scope === 'upcoming' && window.KendoEventMap) window.KendoEventMap.init(events, (id, trigger) => openModal(id, trigger));
   organiseEventLists();
   const cards = [...mainEventList.querySelectorAll('.kk-card')];
   events.forEach(event => {
     const card = cards.find(card => card.querySelector('[data-event-id]')?.dataset.eventId === String(event.id));
     if (card) mainEventList.appendChild(card);
   });
+  if (scope === 'upcoming') {
+    const groups = new Map();
+    [...mainEventList.querySelectorAll('.kk-card')].forEach(card => {
+      const event = eventsById.get(card.querySelector('[data-event-id]').dataset.eventId);
+      const key = event.start.slice(0, 7);
+      if (!groups.has(key)) {
+        const group = document.createElement('section'); group.className = 'kk-list-month';
+        const heading = document.createElement('h2'); heading.id = `kk-list-month-${key}`;
+        heading.textContent = new Date(`${key}-01T12:00:00`).toLocaleDateString('en-GB', {month:'long', year:'numeric'});
+        group.setAttribute('aria-labelledby', heading.id); group.appendChild(heading);
+        mainEventList.appendChild(group); groups.set(key, group);
+      }
+      groups.get(key).appendChild(card);
+    });
+  }
   updateFilters();
   document.querySelector(`[data-view="${app.dataset.defaultView || 'list'}"]`)?.click();
 
