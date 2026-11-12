@@ -607,10 +607,12 @@ function kk_events_shortcode($atts = []) {
                 <div class="kk-timeline-nav" role="group" aria-label="Timeline navigation">
                     <button type="button" class="kk-month-button" data-timeline-pdf>Download PDF</button>
                     <button type="button" class="kk-month-button" data-timeline-toggle-countries>Untick all</button>
-                    <button type="button" class="kk-month-button" data-timeline-all>All dates</button>
-                    <button type="button" class="kk-month-button" data-timeline-step="-1" aria-label="Previous three months">←</button>
-                    <button type="button" class="kk-month-button" data-timeline-today>Today</button>
-                    <button type="button" class="kk-month-button" data-timeline-step="1" aria-label="Next three months">→</button>
+                    <label class="kk-quarter-filter">Year <select data-timeline-year aria-label="Timeline year"></select></label>
+                    <label class="kk-quarter-filter">Quarter <select data-timeline-quarter aria-label="Timeline quarter">
+                        <option value="0">Q1 · Jan–Mar</option><option value="1">Q2 · Apr–Jun</option><option value="2">Q3 · Jul–Sep</option><option value="3">Q4 · Oct–Dec</option>
+                    </select></label>
+                    <button type="button" class="kk-month-button" data-timeline-step="-1" aria-label="Previous quarter">←</button>
+                    <button type="button" class="kk-month-button" data-timeline-step="1" aria-label="Next quarter">→</button>
                 </div>
             </div>
             <div class="kk-timeline-legend" aria-label="Timeline event types">
@@ -618,9 +620,9 @@ function kk_events_shortcode($atts = []) {
                 <span><i style="background:#287A48" aria-hidden="true"></i>Seminar / training camp</span>
                 <span><i style="background:#454545" aria-hidden="true"></i>Grading / exam</span>
             </div>
-            <p class="kk-timeline-help">Unticked countries move to the bottom. Tick them again to restore their alphabetical position. Scroll horizontally to explore dates. Split colours indicate event types, not separate sessions.</p>
+            <p class="kk-timeline-help">Events are grouped by type. Flags show the host country; names appear below each bar. Events with several types appear in each relevant row. Scroll horizontally to explore dates.</p>
             <p class="kk-timeline-count" role="status"></p>
-            <div class="kk-timeline-scroll" tabindex="0" role="region" aria-label="Timeline by country, scroll horizontally for dates">
+            <div class="kk-timeline-scroll" tabindex="0" role="region" aria-label="Timeline by event type, scroll horizontally for dates">
                 <div class="kk-timeline-grid"></div>
             </div>
             <p class="kk-timeline-empty" hidden>No events in this period match your filters. Try another period or change the filters.</p>

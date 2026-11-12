@@ -3,9 +3,9 @@
   'use strict';
   const DAY = 86400000;
   const categories = [
-    { key: 'competition', label: 'Competition', color: '#17365D' },
-    { key: 'seminar', label: 'Seminar', color: '#287A48' },
-    { key: 'grading', label: 'Grading / exam', color: '#454545' },
+    { key: 'competition', label: 'Competitions', color: '#17365D' },
+    { key: 'seminar', label: 'Seminars', color: '#287A48' },
+    { key: 'grading', label: 'Exams', color: '#454545' },
   ];
   const day = iso => {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(String(iso))) return NaN;
@@ -17,6 +17,7 @@
     const raw = Array.isArray(event.types) && event.types.length ? event.types : String(event.type || '').split(/[|,·]/);
     const keys = new Set(raw.map(value => String(value).trim().toLowerCase()));
     // Existing site categories also include camps and professional certifications.
+    if (keys.has('course')) keys.add('seminar');
     if (keys.has('training camp')) keys.add('seminar');
     if (keys.has('exam') || keys.has('professional certifications')) keys.add('grading');
     const matched = categories.filter(category => keys.has(category.key));
@@ -78,8 +79,8 @@
         doc.text(type.label,x+7,34); x+=55;
       });
       doc.setFontSize(7); doc.setTextColor(85,90,95);
-      doc.text('Split colours indicate event types. Events spanning months appear in each relevant month.',12,40);
-      doc.text('Country / event',12,48);
+      doc.text('Multi-type events appear in each category. Events spanning months appear in each relevant month.',12,40);
+      doc.text('Event / country',12,48);
       for(let i=1;i<=days;i++) doc.text(String(i),94+(i-.5)*190/days,48,{align:'center'});
       y=52;
     };
@@ -91,11 +92,13 @@
       pageHead(current,days);
       const groups = new Map();
       rows.forEach(row=>{
-        const country=countryFor(row.event);
-        if(!groups.has(country)) groups.set(country,[]);
-        groups.get(country).push(row);
+        row.types.forEach(type=>{
+          if(!groups.has(type.key)) groups.set(type.key,[]);
+          groups.get(type.key).push({...row,types:[type]});
+        });
       });
-      [...groups].sort(([a],[b])=>a.localeCompare(b)).forEach(([country,entries])=>{
+      [...categories,{key:'other',label:'Other events'}].filter(type=>groups.has(type.key)).forEach(type=>{
+        const country=type.label, entries=groups.get(type.key);
         const heading = continued => {
           doc.setFillColor(237,240,243); doc.rect(12,y,272,7,'F');
           doc.setFontSize(9); doc.setTextColor(25,30,35);
@@ -105,7 +108,7 @@
         heading(false);
         entries.forEach(row=>{
           doc.setFontSize(8);
-          const title=doc.splitTextToSize(row.event.title,77);
+          const title=doc.splitTextToSize(`${row.event.title} — ${countryFor(row.event)}`,77);
           const height=Math.max(13,title.length*3.5+6);
           if(y+height>190){pageHead(current,days);heading(true);}
           doc.setTextColor(25,30,35); doc.text(title,13,y+4);
@@ -150,14 +153,31 @@
     pdfButton.disabled = data.rows.length === 0;
     pdfButton.title = data.rows.length ? 'Download your selected timeline as PDF' : 'Select countries with events to download a PDF';
     pdfButton.onclick = () => downloadPdf(panel, events, year, month, months);
-    const countryData = model(events, year, month, months);
+    let chooser = panel.querySelector('.kk-timeline-country-picker');
+    if (!chooser) {
+      chooser = element('details', 'kk-timeline-country-picker');
+      chooser.append(element('summary', '', 'Filter countries'));
+      chooser.append(element('div', 'kk-timeline-country-options'));
+      panel.querySelector('.kk-timeline-scroll').before(chooser);
+    }
+    const options = chooser.querySelector('.kk-timeline-country-options'); options.replaceChildren();
+    [...new Set(allEvents.map(countryFor))].sort((a,b)=>a.localeCompare(b)).forEach(country => {
+      const label = element('label', '');
+      const input = document.createElement('input'); input.type='checkbox'; input.className='kk-timeline-country-checkbox'; input.value=country; input.checked=panel._kkCountries.has(country);
+      input.addEventListener('change',()=>{
+        if(input.checked) panel._kkCountries.add(country); else panel._kkCountries.delete(country);
+        render(panel,...panel._kkTimelineArgs);
+        [...options.querySelectorAll('input')].find(item=>item.value===country)?.focus({preventScroll:true});
+      });
+      label.append(input,document.createTextNode(` ${flagFor(country)} ${country}`)); options.append(label);
+    });
     const format = (value, options) => new Date(value * DAY).toLocaleDateString('en-GB', { ...options, timeZone: 'UTC' });
     panel.querySelector('.kk-timeline-title').textContent = `${format(data.start, { month: 'short', year: 'numeric' })} – ${format(data.end - 1, { month: 'short', year: 'numeric' })}`;
     const grid = panel.querySelector('.kk-timeline-grid');
     grid.replaceChildren();
     grid.style.setProperty('--kk-timeline-days', data.days);
     const heading = element('div', 'kk-timeline-row kk-timeline-heading');
-    heading.append(element('div', 'kk-timeline-label', 'Country'));
+    heading.append(element('div', 'kk-timeline-label', 'Event type'));
     const scale = element('div', 'kk-timeline-track kk-timeline-scale');
     for (let index = 0; index < months; index++) {
       const begin = Date.UTC(year, month + index, 1) / DAY;
@@ -176,45 +196,20 @@
     }
     heading.append(scale);
     grid.append(heading);
-    const groups = new Map();
-    countryData.rows.forEach(row => {
-      const country = countryFor(row.event);
-      if (!groups.has(country)) groups.set(country, []);
-      groups.get(country).push(row);
-    });
-    const countries = [...new Set(allEvents.map(countryFor))].sort((a, b) =>
-      Number(panel._kkCountries.has(b)) - Number(panel._kkCountries.has(a)) || a.localeCompare(b));
-    let hiddenHeadingAdded = false;
-    countries.forEach(country => {
-      const selected = panel._kkCountries.has(country);
-      if (!selected && !hiddenHeadingAdded) {
-        const divider = element('div', 'kk-timeline-row kk-timeline-hidden-heading');
-        divider.append(element('div', 'kk-timeline-label', 'Hidden countries'), element('div', 'kk-timeline-hidden-divider'));
-        grid.append(divider);
-        hiddenHeadingAdded = true;
-      }
-      const rows = selected ? (groups.get(country) || []) : [];
-      const entry = element('div', 'kk-timeline-row');
-      entry.dataset.country = country;
-      entry.classList.toggle('is-country-hidden', !selected);
-      const label = element('label', 'kk-timeline-label kk-timeline-country-name');
-      const checkbox = document.createElement('input');
-      checkbox.className = 'kk-timeline-country-checkbox';
-      checkbox.type = 'checkbox';
-      checkbox.checked = selected;
-      checkbox.value = country;
-      checkbox.setAttribute('aria-label', `Show events in ${country}`);
-      checkbox.addEventListener('change', () => {
-        if (checkbox.checked) panel._kkCountries.add(country);
-        else panel._kkCountries.delete(country);
-        render(panel, ...panel._kkTimelineArgs);
-        [...panel.querySelectorAll('.kk-timeline-country-checkbox')].find(input => input.value === country)?.focus({ preventScroll: true });
-      });
-      const flag = element('span', 'kk-timeline-flag', flagFor(country));
-      flag.setAttribute('aria-hidden', 'true');
-      const copy = element('span', 'kk-timeline-copy');
-      copy.append(element('strong', '', country), element('small', '', selected ? `${rows.length} event${rows.length === 1 ? '' : 's'}` : 'Hidden — tick to show'));
-      label.append(checkbox, flag, copy);
+    const groups = new Map(categories.map(type=>[type.key, []]));
+    data.rows.forEach(row => row.types.forEach(type => {
+      if(!groups.has(type.key)) groups.set(type.key, []);
+      groups.get(type.key).push(row);
+    }));
+    const rowTypes = [...categories];
+    if(groups.has('other')) rowTypes.push({key:'other',label:'Other events',color:'#66717A'});
+    rowTypes.forEach(type => {
+      const rows = groups.get(type.key) || [];
+      const entry = element('div', 'kk-timeline-row'); entry.dataset.category=type.key;
+      const label = element('div', 'kk-timeline-label kk-timeline-category');
+      const swatch = element('span','kk-timeline-category-swatch'); swatch.style.backgroundColor=type.color; swatch.setAttribute('aria-hidden','true');
+      const copy = element('span','kk-timeline-copy'); copy.append(element('strong','',type.label),element('small','',`${rows.length} events`));
+      label.append(swatch,copy);
       const track = element('div', 'kk-timeline-track');
       const laneEnds = [];
       rows.forEach(row => {
@@ -236,12 +231,13 @@
       const description = `${event.title}, ${event.country || 'Country not specified'}, ${event.start} – ${event.end || event.start}, ${row.types.map(type => type.label).join(' + ')}`;
       bar.setAttribute('aria-label', description);
       bar.title = description;
-      row.types.forEach(type => {
+      [type].forEach(type => {
         const segment = element('span', 'kk-timeline-segment');
         segment.style.backgroundColor = type.color;
         segment.setAttribute('aria-hidden', 'true');
         bar.append(segment);
       });
+      const flag = element('span','kk-timeline-bar-flag',flagFor(event.country)); flag.setAttribute('aria-hidden','true'); bar.append(flag);
       const name = element('button', 'kk-timeline-event-name', event.title);
       name.type = 'button';
       name.dataset.eventId = event.id;
@@ -250,12 +246,12 @@
       item.append(bar, name);
       track.append(item);
       });
-      entry.style.minHeight = `${selected ? Math.max(82, laneEnds.length * 62 + 18) : 58}px`;
+      entry.style.minHeight = `${Math.max(82, laneEnds.length * 62 + 18)}px`;
       entry.append(label, track);
       grid.append(entry);
     });
     panel.querySelector('.kk-timeline-empty').hidden = data.rows.length > 0;
-    const visibleCountries = [...groups.keys()].filter(country => panel._kkCountries.has(country)).length;
+    const visibleCountries = new Set(data.rows.map(row=>countryFor(row.event))).size;
     panel.querySelector('.kk-timeline-count').textContent = `${data.rows.length} event${data.rows.length === 1 ? '' : 's'} · ${visibleCountries} countr${visibleCountries === 1 ? 'y' : 'ies'} in this period`;
   };
   const api = { day, iso, model, typesFor, flagFor, render };

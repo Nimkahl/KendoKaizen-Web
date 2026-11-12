@@ -88,15 +88,35 @@
   const listPanel = document.querySelector('.kk-list-panel');
   const calendarPanel = document.querySelector('.kk-calendar-panel');
   const timelinePanel = document.querySelector('.kk-timeline-panel');
-  const timelineDates = events.flatMap(event => [event.start, event.end || event.start]).filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
-  const timelineFirst = timelineDates.length ? new Date(`${timelineDates[0]}T12:00:00`) : new Date();
-  const timelineLast = timelineDates.length ? new Date(`${timelineDates[timelineDates.length - 1]}T12:00:00`) : timelineFirst;
-  const timelineFullMonths = Math.max(1, (timelineLast.getFullYear() - timelineFirst.getFullYear()) * 12 + timelineLast.getMonth() - timelineFirst.getMonth() + 1);
-  let timelineMonths = timelineFullMonths;
-  let timelineMonth = new Date(timelineFirst.getFullYear(), timelineFirst.getMonth(), 1);
-  const renderTimeline = () => {
-    if (!timelinePanel.hidden) window.KendoTimeline.render(timelinePanel, filteredEvents(true), timelineMonth.getFullYear(), timelineMonth.getMonth(), timelineMonths, events);
+  const timelineNow = new Date(`${todayIso}T12:00:00`);
+  let timelineMonth = new Date(timelineNow.getFullYear(), Math.floor(timelineNow.getMonth() / 3) * 3, 1);
+  const timelineYear = timelinePanel.querySelector('[data-timeline-year]');
+  const timelineQuarter = timelinePanel.querySelector('[data-timeline-quarter]');
+  const eventYears = events.flatMap(event => [Number(event.start.slice(0, 4)), Number((event.end || event.start).slice(0, 4))]).filter(Number.isFinite);
+  const firstYear = Math.min(timelineNow.getFullYear() - 5, ...eventYears);
+  const lastYear = Math.max(timelineNow.getFullYear() + 5, ...eventYears);
+  for (let year = firstYear; year <= lastYear; year++) timelineYear.add(new Option(String(year), String(year)));
+  const syncTimelinePeriod = () => {
+    const year = String(timelineMonth.getFullYear());
+    if (![...timelineYear.options].some(option => option.value === year)) {
+      timelineYear.add(new Option(year, year));
+      [...timelineYear.options].sort((a,b)=>Number(a.value)-Number(b.value)).forEach(option=>timelineYear.appendChild(option));
+    }
+    timelineYear.value = year;
+    timelineQuarter.value = String(Math.floor(timelineMonth.getMonth() / 3));
   };
+  const renderTimeline = () => {
+    syncTimelinePeriod();
+    if (!timelinePanel.hidden) window.KendoTimeline.render(timelinePanel, filteredEvents(true), timelineMonth.getFullYear(), timelineMonth.getMonth(), 3, events);
+  };
+  const selectTimelinePeriod = () => {
+    timelineMonth = new Date(Number(timelineYear.value), Number(timelineQuarter.value) * 3, 1);
+    timelinePanel.querySelector('.kk-timeline-scroll').scrollLeft = 0;
+    renderTimeline();
+  };
+  timelineYear.addEventListener('change', selectTimelinePeriod);
+  timelineQuarter.addEventListener('change', selectTimelinePeriod);
+  syncTimelinePeriod();
   const calendarGrid = document.querySelector('.kk-calendar-grid');
   const calendarTitle = document.querySelector('.kk-calendar-title');
   const countryFilter = document.getElementById('kk-country-filter');
@@ -772,20 +792,9 @@
     const timelineStep = event.target.closest('[data-timeline-step]');
     if (timelineStep) {
       timelineMonth = new Date(timelineMonth.getFullYear(), timelineMonth.getMonth() + Number(timelineStep.dataset.timelineStep) * 3, 1);
+      timelinePanel.querySelector('.kk-timeline-scroll').scrollLeft = 0;
       renderTimeline();
     }
-    if (event.target.closest('[data-timeline-today]')) {
-      const now = new Date();
-      timelineMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      timelineMonths = 3;
-      renderTimeline();
-    }
-    if (event.target.closest('[data-timeline-all]')) {
-      timelineMonth = new Date(timelineFirst.getFullYear(), timelineFirst.getMonth(), 1);
-      timelineMonths = timelineFullMonths;
-      renderTimeline();
-    }
-
     const modeButton = event.target.closest('[data-calendar-mode]');
     if (modeButton && mobileCalendar.matches) {
       calendarMode = modeButton.dataset.calendarMode;

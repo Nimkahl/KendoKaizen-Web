@@ -4,7 +4,7 @@ Theme URI: https://example.com/kendokaizen
 Description: Kadence child theme for the KendoKaizen European kendo events agenda.
 Author: KendoKaizen
 Template: kadence
-Version: 0.8.28
+Version: 0.8.30
 Text Domain: kendokaizen
 */
 
@@ -2640,3 +2640,14 @@ body.kk-site .kk-sidebar-about h2 { font-family: inherit; font-size: 19px; margi
 
 /* Keep the Contact page title readable in both colour themes. */
 body.kk-site .kk-contact-heading h1 { color: var(--kk-ink); }
+
+.kk-timeline-category { align-items: flex-start; padding-top: 20px; }
+.kk-timeline-category-swatch { flex: 0 0 12px; height: 24px; border-radius: 3px; }
+.kk-timeline-bar-flag { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1; pointer-events: none; }
+.kk-timeline-country-picker { margin: 12px 0; padding: 12px; border: 1px solid var(--kk-line); border-radius: 4px; }
+.kk-timeline-country-picker summary { cursor: pointer; font-weight: 700; }
+.kk-timeline-country-options { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-top: 12px; }
+.kk-timeline-country-options label { display: flex; gap: 6px; align-items: center; font-size: 13px; cursor: pointer; }
+
+.kk-quarter-filter { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.kk-quarter-filter select { width: auto; min-width: 85px; border-radius: 4px; color: var(--kk-ink); background: var(--kk-white); border: 1px solid var(--kk-line); padding: 8px 24px 8px 8px; }

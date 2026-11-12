@@ -1,5 +1,9 @@
 # WordPress Playground version history
 
+## v0.8.30 — stable timeline
+
+Owner-approved stable snapshot: event-type rows, country flags in bars, year/quarter selectors, and complete Q1–Q4 navigation across year boundaries. Retains country selection and PDF export. Export and checksum documented in STABLE_VERSION.md. No deployment.
+
 ## v0.8.28 — approved home and About updates
 
 Includes the event map with zoom-dependent clusters, organiser contact card and submission guide, compact monthly upcoming list with list-only month filter, sidebar About notice, About us page with fox mascot, and Contact heading dark-mode fix. Supersedes the intermediate watermark experiments. Export: `wordpress-playground_v0.8.28-contact-dark-mode-preview.zip` (outside Git). Existing importer and event data are unchanged. Map locations use six verified city centres unless saved venue coordinates exist; new unknown cities require coordinates. Background tiles require internet. Prior browser checks used mocked map tiles. Eleven unit tests pass; the source theme matches the reviewed ZIP. No server deployment or social-media connection included.
